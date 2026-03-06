@@ -90,6 +90,23 @@ rtp:prepend(lazypath)
 require('lazy').setup({
   { 'NMAC427/guess-indent.nvim', opts = {} },
 
+  {
+    'petertriho/nvim-scrollbar',
+    opts = {
+      handle = {
+        blend = 0, -- make scrollbar fully opaque
+      },
+      marks = {
+        GitAdd = { text = '▎' },
+        GitChange = { text = '▎' },
+        GitDelete = { text = '▎' },
+      },
+      handlers = {
+        gitsigns = true,
+      },
+    },
+  },
+
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     ---@module 'gitsigns'
@@ -97,11 +114,11 @@ require('lazy').setup({
     ---@diagnostic disable-next-line: missing-fields
     opts = {
       signs = {
-        add = { text = '+' }, ---@diagnostic disable-line: missing-fields
-        change = { text = '~' }, ---@diagnostic disable-line: missing-fields
-        delete = { text = '_' }, ---@diagnostic disable-line: missing-fields
-        topdelete = { text = '‾' }, ---@diagnostic disable-line: missing-fields
-        changedelete = { text = '~' }, ---@diagnostic disable-line: missing-fields
+        add = { text = '▎' }, ---@diagnostic disable-line: missing-fields
+        change = { text = '▎' }, ---@diagnostic disable-line: missing-fields
+        delete = { text = '━━' }, ---@diagnostic disable-line: missing-fields
+        topdelete = { text = '━━' }, ---@diagnostic disable-line: missing-fields
+        changedelete = { text = '▎' }, ---@diagnostic disable-line: missing-fields
       },
     },
   },
@@ -114,7 +131,6 @@ require('lazy').setup({
     ---@diagnostic disable-next-line: missing-fields
     opts = {
       delay = 0,
-      icons = { mappings = vim.g.have_nerd_font },
       spec = {
         { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
         { '<leader>t', group = '[T]oggle' },
@@ -348,9 +364,6 @@ require('lazy').setup({
       keymap = {
         preset = 'default',
       },
-      appearance = {
-        nerd_font_variant = 'mono',
-      },
       completion = {
         documentation = { auto_show = false, auto_show_delay_ms = 500 },
       },
@@ -374,6 +387,41 @@ require('lazy').setup({
     end,
   },
 
+  {
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    opts = {
+      options = {
+        theme = 'nord',
+        section_separators = '',
+        component_separators = '',
+      },
+      sections = {
+        lualine_a = { 'mode' },
+        lualine_b = {
+          function()
+            local root = vim.fn.system('git rev-parse --show-toplevel 2>/dev/null'):gsub('\n', '')
+            if vim.v.shell_error == 0 and root ~= '' then return vim.fn.fnamemodify(root, ':t') end
+            return vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
+          end,
+          { 'branch', icon = '' },
+        },
+        lualine_d = { { 'filename', symbols = { modified = ' ●' } } },
+        lualine_x = {},
+        lualine_y = {},
+        lualine_z = { function() return os.date '%I:%M' end },
+      },
+      inactive_sections = {
+        lualine_a = {},
+        lualine_b = {},
+        lualine_c = { 'filename' },
+        lualine_x = {},
+        lualine_y = {},
+        lualine_z = {},
+      },
+    },
+  },
+
   { -- Collection of various small independent plugins/modules
     'nvim-mini/mini.nvim',
     config = function()
@@ -382,13 +430,6 @@ require('lazy').setup({
 
       -- Add/delete/replace surroundings (brackets, quotes, etc.)
       require('mini.surround').setup()
-
-      -- Simple and easy statusline.
-      local statusline = require 'mini.statusline'
-      statusline.setup { use_icons = vim.g.have_nerd_font }
-
-      ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function() return '%2l:%-2v' end
     end,
   },
 
@@ -417,7 +458,7 @@ require('lazy').setup({
   },
 }, { ---@diagnostic disable-line: missing-fields
   ui = {
-    icons = vim.g.have_nerd_font and {} or {
+    icons = {
       cmd = '⌘',
       config = '🛠',
       event = '📅',
