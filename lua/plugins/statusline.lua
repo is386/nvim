@@ -1,7 +1,7 @@
 return {
   {
     'nvim-lualine/lualine.nvim',
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    dependencies = {},
     opts = {
       options = {
         theme = 'nord',
@@ -16,7 +16,7 @@ return {
             if vim.v.shell_error == 0 and root ~= '' then return vim.fn.fnamemodify(root, ':t') end
             return vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
           end,
-          { 'branch', icon = '' },
+          { 'branch' },
         },
         lualine_d = { { 'filename', symbols = { modified = ' ●' } } },
         lualine_x = {},
