@@ -60,6 +60,24 @@ return {
       ---@type table<string, vim.lsp.Config>
       local servers = {
         stylua = {},
+        eslint = {
+          on_attach = function(client, bufnr)
+            vim.api.nvim_buf_create_user_command(bufnr, 'EslintFixAll', function()
+              client:request_sync('workspace/executeCommand', {
+                command = 'eslint.applyAllFixes',
+                arguments = { {
+                  uri = vim.uri_from_bufnr(bufnr),
+                  version = vim.lsp.util.buf_versions[bufnr],
+                } },
+              }, 1000, bufnr)
+            end, { desc = 'Fix all ESLint errors' })
+
+            vim.api.nvim_create_autocmd('BufWritePre', {
+              buffer = bufnr,
+              command = 'EslintFixAll',
+            })
+          end,
+        },
         lua_ls = {
           on_init = function(client)
             if client.workspace_folders then
@@ -89,7 +107,8 @@ return {
 
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        -- You can add other tools here that you want Mason to install
+        'prettierd',
+        'prettier',
       })
 
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
