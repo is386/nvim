@@ -14,6 +14,26 @@ return {
     },
     config = function()
       require('telescope').setup {
+        defaults = {
+          file_ignore_patterns = {
+            '%.git/',
+            'node_modules/',
+            '%.DS_Store',
+            '__pycache__/',
+            '%.o',
+            '%.zip',
+            '%.tar%.gz',
+            '%.jpg',
+            '%.png',
+            '%.gif',
+            '%.pdf',
+          },
+        },
+        pickers = {
+          find_files = {
+            hidden = true,
+          },
+        },
         extensions = {
           ['ui-select'] = { require('telescope.themes').get_dropdown() },
         },
