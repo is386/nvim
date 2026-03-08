@@ -8,6 +8,7 @@ return {
       }
       vim.cmd.colorscheme 'nord'
       vim.api.nvim_set_hl(0, '@comment', { fg = '#616e88', italic = false })
+      vim.api.nvim_set_hl(0, '@variable.parameter', { fg = '#D8DEE9' })
     end,
   },
 }
