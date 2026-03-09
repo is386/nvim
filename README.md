@@ -42,7 +42,10 @@ npm install -g tree-sitter-cli
 ### macOS
 
 ```sh
-brew install neovim git make gcc unzip ripgrep fd tree-sitter node bat
+brew install neovim git make gcc unzip ripgrep fd tree-sitter-cli luarocks bat
+
+# Build blink.cmp (after first Neovim launch installs plugins)
+cd ~/.local/share/nvim/lazy/blink.cmp && cargo build --release
 ```
 
 ## Font
