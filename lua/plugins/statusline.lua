@@ -1,9 +1,7 @@
 local git_root_cache = {}
 
 vim.api.nvim_create_autocmd({ 'BufEnter', 'DirChanged' }, {
-  callback = function()
-    git_root_cache[vim.api.nvim_get_current_buf()] = nil
-  end,
+  callback = function() git_root_cache[vim.api.nvim_get_current_buf()] = nil end,
 })
 
 local function project_name()
@@ -18,9 +16,7 @@ local function project_name()
   return git_root_cache[buf]
 end
 
-local function clock()
-  return os.date '%I:%M'
-end
+local function clock() return os.date '%I:%M' end
 
 return {
   {

@@ -20,12 +20,5 @@ return {
       })
 
     end,
-    keys = {
-      { '<leader>to', '<cmd>TSToolsOrganizeImports<cr>', desc = 'TS Organize Imports' },
-      { '<leader>ta', '<cmd>TSToolsAddMissingImports<cr>', desc = 'TS Add Missing Imports' },
-      { '<leader>tu', '<cmd>TSToolsRemoveUnusedImports<cr>', desc = 'TS Remove Unused Imports' },
-      { '<leader>tf', '<cmd>TSToolsFixAll<cr>', desc = 'TS Fix All' },
-      { '<leader>tr', '<cmd>TSToolsRenameFile<cr>', desc = 'TS Rename File' },
-    },
   },
 }
