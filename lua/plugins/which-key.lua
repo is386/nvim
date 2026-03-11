@@ -15,10 +15,9 @@ return {
         },
         spec = {
           { '<leader>s', group = 'Search', mode = { 'n', 'v' } },
-          { '<leader>c', group = 'Conform' },
-          { '<leader>t', group = 'Typescript' },
           { '<leader>g', group = 'Git' },
-          { '<leader>h', group = 'Git Hunk', mode = { 'n', 'v' } },
+          { '<leader>h', group = 'Harpoon', mode = { 'n', 'v' } },
+          { '<leader>d', group = 'Split' },
           { '<leader>l', group = 'LSP' },
         },
       }
