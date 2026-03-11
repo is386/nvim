@@ -11,9 +11,7 @@ return {
       pattern = 'AutoSaveWritePost',
       group = vim.api.nvim_create_augroup('autosave-notify', {}),
       callback = function(ev)
-        if ev.data.saved_buffer ~= nil then
-          vim.notify('Auto-saved at ' .. vim.fn.strftime('%I:%M:%S'), vim.log.levels.INFO)
-        end
+        if ev.data.saved_buffer ~= nil then vim.notify('Auto-saved at ' .. vim.fn.strftime '%I:%M:%S', vim.log.levels.INFO) end
       end,
     })
   end,
