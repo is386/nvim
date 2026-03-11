@@ -32,9 +32,7 @@ local function check_tool(exe, alternatives, purpose, severity)
     vim.health.ok(found_name .. ': ' .. purpose)
   else
     local names = exe
-    if alternatives then
-      names = names .. '/' .. table.concat(alternatives, '/')
-    end
+    if alternatives then names = names .. '/' .. table.concat(alternatives, '/') end
     vim.health[severity](names .. ' not found: ' .. purpose)
   end
 end
@@ -55,9 +53,7 @@ local function check_tools()
   check_tool('npm', nil, 'tree-sitter-cli install', 'error')
   check_tool('bat', { 'batcat' }, 'better previews', 'error')
 
-  if is_linux then
-    check_tool('xclip', nil, 'clipboard support (Linux)', 'error')
-  end
+  if is_linux then check_tool('xclip', nil, 'clipboard support (Linux)', 'error') end
 end
 
 local function check_plugins()
@@ -82,7 +78,7 @@ local function check_plugins()
 end
 
 M.check = function()
-  vim.health.start('config')
+  vim.health.start 'config'
   system_info()
   check_version()
   check_tools()
