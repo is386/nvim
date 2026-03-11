@@ -5,10 +5,10 @@ return {
     cmd = { 'ConformInfo' },
     keys = {
       {
-        '<leader>f',
+        '<leader>cf',
         function() require('conform').format { async = true, lsp_format = 'fallback' } end,
         mode = '',
-        desc = '[F]ormat buffer',
+        desc = 'Format',
       },
     },
     ---@module 'conform'
@@ -38,9 +38,17 @@ return {
         prettierd = {
           condition = function(_, ctx)
             local prettier_configs = {
-              '.prettierrc', '.prettierrc.js', '.prettierrc.cjs', '.prettierrc.mjs',
-              '.prettierrc.json', '.prettierrc.json5', '.prettierrc.yaml', '.prettierrc.yml',
-              'prettier.config.js', 'prettier.config.cjs', 'prettier.config.mjs',
+              '.prettierrc',
+              '.prettierrc.js',
+              '.prettierrc.cjs',
+              '.prettierrc.mjs',
+              '.prettierrc.json',
+              '.prettierrc.json5',
+              '.prettierrc.yaml',
+              '.prettierrc.yml',
+              'prettier.config.js',
+              'prettier.config.cjs',
+              'prettier.config.mjs',
             }
             return vim.fs.find(prettier_configs, { path = ctx.filename, upward = true })[1] ~= nil
           end,

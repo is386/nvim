@@ -14,10 +14,12 @@ return {
           separator = '',
         },
         spec = {
-          { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
-          { '<leader>t', group = '[T]oggle' },
-          { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
-          { 'gr', group = 'LSP Actions', mode = { 'n' } },
+          { '<leader>s', group = 'Search', mode = { 'n', 'v' } },
+          { '<leader>c', group = 'Conform' },
+          { '<leader>t', group = 'Typescript' },
+          { '<leader>g', group = 'Git' },
+          { '<leader>h', group = 'Git Hunk', mode = { 'n', 'v' } },
+          { '<leader>l', group = 'LSP' },
         },
       }
     end,
