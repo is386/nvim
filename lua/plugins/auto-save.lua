@@ -3,7 +3,11 @@ return {
   version = '^1.0.0',
   cmd = 'ASToggle',
   event = { 'InsertLeave', 'TextChanged' },
-  opts = {},
+  opts = {
+    condition = function(buf)
+      return vim.bo[buf].buftype == ''
+    end,
+  },
   config = function(_, opts)
     require('auto-save').setup(opts)
 

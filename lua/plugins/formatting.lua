@@ -3,14 +3,6 @@ return {
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
     cmd = { 'ConformInfo' },
-    keys = {
-      {
-        '<leader>cf',
-        function() require('conform').format { async = true, lsp_format = 'fallback' } end,
-        mode = '',
-        desc = 'Format',
-      },
-    },
     ---@module 'conform'
     ---@type conform.setupOpts
     opts = {
