@@ -8,9 +8,9 @@ return {
         blend = 0, -- make scrollbar fully opaque
       },
       marks = {
-        GitAdd = { text = '▎' },
-        GitChange = { text = '▎' },
-        GitDelete = { text = '▎' },
+        GitAdd = {},
+        GitChange = {},
+        GitDelete = {},
       },
       handlers = {
         gitsigns = true,

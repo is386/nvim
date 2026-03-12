@@ -49,10 +49,6 @@ return {
               end,
             })
           end
-
-          if client and client:supports_method('textDocument/inlayHint', event.buf) then
-            map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, 'Toggle Inlay Hints')
-          end
         end,
       })
 
@@ -61,15 +57,22 @@ return {
         stylua = {},
         eslint = {
           on_attach = function(client, bufnr)
-            vim.api.nvim_buf_create_user_command(bufnr, 'EslintFixAll', function()
-              client:request_sync('workspace/executeCommand', {
-                command = 'eslint.applyAllFixes',
-                arguments = { {
-                  uri = vim.uri_from_bufnr(bufnr),
-                  version = vim.lsp.util.buf_versions[bufnr],
-                } },
-              }, 1000, bufnr)
-            end, { desc = 'Fix all ESLint errors' })
+            vim.api.nvim_buf_create_user_command(
+              bufnr,
+              'EslintFixAll',
+              function()
+                client:request_sync('workspace/executeCommand', {
+                  command = 'eslint.applyAllFixes',
+                  arguments = {
+                    {
+                      uri = vim.uri_from_bufnr(bufnr),
+                      version = vim.lsp.util.buf_versions[bufnr],
+                    },
+                  },
+                }, 1000, bufnr)
+              end,
+              { desc = 'Fix all ESLint errors' }
+            )
 
             vim.api.nvim_create_autocmd('BufWritePre', {
               buffer = bufnr,
