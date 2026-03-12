@@ -4,6 +4,7 @@ return {
   cmd = 'ASToggle',
   event = { 'InsertLeave', 'TextChanged' },
   opts = {
+    noautocmd = true,
     condition = function(buf)
       return vim.bo[buf].buftype == ''
     end,

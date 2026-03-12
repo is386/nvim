@@ -29,6 +29,28 @@ return {
       formatters = {
         prettierd = {
           condition = function(_, ctx)
+            local runtime_dir = vim.env.XDG_RUNTIME_DIR or '/run/user/' .. vim.fn.getuid()
+            if vim.fn.isdirectory(runtime_dir) == 0 then
+              return false
+            end
+            local prettier_configs = {
+              '.prettierrc',
+              '.prettierrc.js',
+              '.prettierrc.cjs',
+              '.prettierrc.mjs',
+              '.prettierrc.json',
+              '.prettierrc.json5',
+              '.prettierrc.yaml',
+              '.prettierrc.yml',
+              'prettier.config.js',
+              'prettier.config.cjs',
+              'prettier.config.mjs',
+            }
+            return vim.fs.find(prettier_configs, { path = ctx.filename, upward = true })[1] ~= nil
+          end,
+        },
+        prettier = {
+          condition = function(_, ctx)
             local prettier_configs = {
               '.prettierrc',
               '.prettierrc.js',
