@@ -29,8 +29,7 @@ return {
       formatters = {
         prettierd = {
           condition = function(_, ctx)
-            local runtime_dir = vim.env.XDG_RUNTIME_DIR or '/run/user/' .. vim.fn.getuid()
-            if vim.fn.isdirectory(runtime_dir) == 0 then
+            if vim.fn.executable('prettierd') ~= 1 then
               return false
             end
             local prettier_configs = {
