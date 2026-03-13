@@ -8,7 +8,7 @@ return {
       'MunifTanjim/nui.nvim',
     },
     keys = {
-      { '<leader>e', '<cmd>Neotree toggle float<cr>', desc = 'Explorer' },
+      { '<leader>e', '<cmd>Neotree reveal float<cr>', desc = 'Explorer' },
     },
     opts = {
       default_component_configs = {
