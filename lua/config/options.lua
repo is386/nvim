@@ -41,6 +41,17 @@ vim.diagnostic.config {
     source = 'if_many',
     spacing = 2,
     prefix = '',
+    format = function(diagnostic)
+      local win_width = vim.api.nvim_win_get_width(0)
+      local col = vim.api.nvim_win_get_cursor(0)[2]
+      local max_len = win_width - col - 15
+      if max_len < 20 then max_len = 20 end
+      local msg = diagnostic.message:gsub('\n', ' ')
+      if #msg > max_len then
+        return msg:sub(1, max_len - 3) .. '...'
+      end
+      return msg
+    end,
   },
 }
 
