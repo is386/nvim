@@ -12,6 +12,10 @@ vim.keymap.set('n', '<leader>dl', '<cmd>leftabove vsplit<CR>', { desc = 'Left' }
 vim.keymap.set('n', '<leader>w', '<cmd>close<CR>', { desc = 'Close' })
 vim.keymap.set('n', '<leader>q', '<cmd>qa<CR>', { desc = 'Quit' })
 
+vim.keymap.set('n', '<leader>ii', function()
+  vim.lsp.buf.hover { border = 'rounded', max_width = 60 }
+end, { desc = 'Info' })
+
 vim.keymap.set('n', '<leader>h', '<C-w>h', { desc = 'which_key_ignore' })
 vim.keymap.set('n', '<leader>j', '<C-w>j', { desc = 'which_key_ignore' })
 vim.keymap.set('n', '<leader>k', '<C-w>k', { desc = 'which_key_ignore' })
