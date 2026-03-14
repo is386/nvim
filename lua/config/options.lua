@@ -21,7 +21,7 @@ vim.o.confirm = true
 -- ERROR LENS
 vim.diagnostic.config {
   severity_sort = true,
-  float = { border = 'rounded', source = 'if_many' },
+  float = { border = 'rounded', source = 'if_many', max_width = 60 },
   underline = false,
   signs = {
     text = {
