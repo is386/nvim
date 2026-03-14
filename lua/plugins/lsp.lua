@@ -23,7 +23,9 @@ return {
             vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
           end
 
-          vim.keymap.set('n', '<leader>ln', vim.lsp.buf.rename, { buffer = event.buf, desc = 'Rename' })
+          vim.keymap.set('n', '<leader>in', vim.lsp.buf.rename, { buffer = event.buf, desc = 'Rename' })
+          vim.keymap.set('n', '<leader>id', vim.lsp.buf.definition, { buffer = event.buf, desc = 'Definition' })
+          vim.keymap.set('n', '<leader>ir', vim.lsp.buf.declaration, { buffer = event.buf, desc = 'Declaration' })
           vim.keymap.set({ 'n', 'x' }, '<leader>.', vim.lsp.buf.code_action, { buffer = event.buf, desc = 'Code Actions' })
 
           local client = vim.lsp.get_client_by_id(event.data.client_id)
@@ -79,6 +81,26 @@ return {
               command = 'EslintFixAll',
             })
           end,
+        },
+        rust_analyzer = {
+          settings = {
+            ['rust-analyzer'] = {
+              check = {
+                command = 'clippy',
+              },
+            },
+          },
+        },
+        gopls = {
+          settings = {
+            gopls = {
+              analyses = {
+                unusedparams = true,
+              },
+              staticcheck = true,
+              gofumpt = true,
+            },
+          },
         },
         lua_ls = {
           on_init = function(client)
