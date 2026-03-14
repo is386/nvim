@@ -10,6 +10,7 @@ vim.keymap.set('n', '<leader>dr', '<cmd>belowright vsplit<CR>', { desc = 'Right'
 vim.keymap.set('n', '<leader>du', '<cmd>above split<CR>', { desc = 'Up' })
 vim.keymap.set('n', '<leader>dl', '<cmd>leftabove vsplit<CR>', { desc = 'Left' })
 vim.keymap.set('n', '<leader>w', '<cmd>close<CR>', { desc = 'Close' })
+vim.keymap.set('n', '<leader>q', '<cmd>qa<CR>', { desc = 'Quit' })
 
 vim.keymap.set('n', '<leader>h', '<C-w>h', { desc = 'which_key_ignore' })
 vim.keymap.set('n', '<leader>j', '<C-w>j', { desc = 'which_key_ignore' })
