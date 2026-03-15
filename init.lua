@@ -2,7 +2,6 @@ require 'config.options'
 require 'config.keymaps'
 require 'config.autocmds'
 
--- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
@@ -10,10 +9,9 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   if vim.v.shell_error ~= 0 then error('Error cloning lazy.nvim:\n' .. out) end
 end
 
----@type vim.Option
 local rtp = vim.opt.rtp
 rtp:prepend(lazypath)
 
-require('lazy').setup { ---@diagnostic disable-line: missing-fields
+require('lazy').setup {
   { import = 'plugins' },
 }

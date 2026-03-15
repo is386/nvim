@@ -14,15 +14,15 @@ return {
       default_component_configs = {
         git_status = {
           symbols = {
-            added     = 'A',
-            deleted   = 'D',
-            modified  = 'M',
-            renamed   = 'R',
+            added = 'A',
+            deleted = 'D',
+            modified = 'M',
+            renamed = 'R',
             untracked = 'U',
-            ignored   = 'I',
-            unstaged  = '○',
-            staged    = '●',
-            conflict  = 'C',
+            ignored = 'I',
+            unstaged = '○',
+            staged = '●',
+            conflict = 'C',
           },
         },
       },
