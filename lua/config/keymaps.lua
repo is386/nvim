@@ -1,5 +1,5 @@
 -- General
-vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR><cmd>w<CR>')
 vim.keymap.set('n', 'H', '^', { desc = 'Go to first non-blank character' })
 vim.keymap.set('n', 'L', '$', { desc = 'Go to end of line' })
 vim.keymap.set('n', '<leader>w', '<cmd>close<CR>', { desc = 'Close' })
