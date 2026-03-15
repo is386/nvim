@@ -14,7 +14,6 @@ return {
       vim.keymap.set('n', '<leader>a', function() harpoon:list():add() end, { desc = 'Add Harpoon' })
       vim.keymap.set('n', '<leader>m', function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = 'Harpoon Menu' })
 
-
       for i = 1, 9 do
         vim.keymap.set('n', '<leader>' .. i, function() harpoon:list():select(i) end, { desc = 'which_key_ignore' })
       end

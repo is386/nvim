@@ -1,12 +1,9 @@
 return {
-  { -- Main LSP Configuration
+  {
     'neovim/nvim-lspconfig',
     dependencies = {
       {
         'mason-org/mason.nvim',
-        ---@module 'mason.settings'
-        ---@type MasonSettings
-        ---@diagnostic disable-next-line: missing-fields
         opts = {},
       },
       'mason-org/mason-lspconfig.nvim',
@@ -18,15 +15,11 @@ return {
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
-          local map = function(keys, func, desc, mode)
-            mode = mode or 'n'
-            vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
-          end
-
-          vim.keymap.set('n', '<leader>ir', vim.lsp.buf.rename, { buffer = event.buf, desc = 'Rename' })
-          vim.keymap.set('n', '<leader>id', vim.lsp.buf.definition, { buffer = event.buf, desc = 'Definition' })
-          vim.keymap.set('n', '<leader>iD', vim.lsp.buf.declaration, { buffer = event.buf, desc = 'Declaration' })
+          vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = event.buf, desc = 'Go to Definition' })
+          vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { buffer = event.buf, desc = 'Go to Declaration' })
+          vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, { buffer = event.buf, desc = 'Rename' })
           vim.keymap.set({ 'n', 'x' }, '<leader>.', vim.lsp.buf.code_action, { buffer = event.buf, desc = 'Code Actions' })
+          vim.keymap.set('n', '<leader>ii', function() vim.lsp.buf.hover { border = 'rounded', max_width = 60 } end, { buffer = event.buf, desc = 'Show Info' })
           vim.keymap.set('n', '<leader>ie', vim.diagnostic.open_float, { buffer = event.buf, desc = 'Show Error' })
 
           local client = vim.lsp.get_client_by_id(event.data.client_id)
@@ -55,7 +48,6 @@ return {
         end,
       })
 
-      ---@type table<string, vim.lsp.Config>
       local servers = {
         stylua = {},
         eslint = {

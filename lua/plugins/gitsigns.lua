@@ -1,16 +1,13 @@
 return {
-  { -- Adds git related signs to the gutter, as well as utilities for managing changes
+  {
     'lewis6991/gitsigns.nvim',
-    ---@module 'gitsigns'
-    ---@type Gitsigns.Config
-    ---@diagnostic disable-next-line: missing-fields
     opts = {
       signs = {
-        add = { text = '▎' }, ---@diagnostic disable-line: missing-fields
-        change = { text = '▎' }, ---@diagnostic disable-line: missing-fields
-        delete = { text = '━━' }, ---@diagnostic disable-line: missing-fields
-        topdelete = { text = '━━' }, ---@diagnostic disable-line: missing-fields
-        changedelete = { text = '▎' }, ---@diagnostic disable-line: missing-fields
+        add = { text = '▎' },
+        change = { text = '▎' },
+        delete = { text = '━━' },
+        topdelete = { text = '━━' },
+        changedelete = { text = '▎' },
       },
     },
     config = function(_, opts)
@@ -23,15 +20,15 @@ return {
     end,
     keys = {
       {
-        '<leader>gp',
+        '<leader>gg',
         function()
-          local winid = require('gitsigns').preview_hunk_inline()
+          require('gitsigns').preview_hunk_inline()
           vim.keymap.set('n', '<Esc>', function()
             vim.api.nvim_exec_autocmds('CursorMoved', { buffer = 0 })
             vim.keymap.del('n', '<Esc>')
           end, { desc = 'Dismiss hunk preview' })
         end,
-        desc = 'Preview Inline',
+        desc = 'Git Preview Inline',
       },
     },
   },
