@@ -1,10 +1,8 @@
 return {
-  { -- Autoformat
+  {
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
     cmd = { 'ConformInfo' },
-    ---@module 'conform'
-    ---@type conform.setupOpts
     opts = {
       notify_on_error = false,
       format_on_save = function(bufnr)
@@ -23,17 +21,13 @@ return {
         go = { 'golines', 'goimports', 'gofumpt' },
         rust = { 'rustfmt' },
         typescript = { 'prettierd', 'prettier', stop_after_first = true },
-        typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
         javascript = { 'prettierd', 'prettier', stop_after_first = true },
-        javascriptreact = { 'prettierd', 'prettier', stop_after_first = true },
         markdown = { 'prettierd', 'prettier', stop_after_first = true },
       },
       formatters = {
         prettierd = {
           condition = function(_, ctx)
-            if vim.fn.executable('prettierd') ~= 1 then
-              return false
-            end
+            if vim.fn.executable 'prettierd' ~= 1 then return false end
             local prettier_configs = {
               '.prettierrc',
               '.prettierrc.js',

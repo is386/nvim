@@ -1,5 +1,5 @@
 return {
-  { -- Colorscheme.
+   {
     'gbprod/nord.nvim',
     priority = 1000,
     config = function()

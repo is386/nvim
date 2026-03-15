@@ -1,11 +1,33 @@
 return {
-  { -- Highlight, edit, and navigate code
+  {
     'nvim-treesitter/nvim-treesitter',
     lazy = false,
     build = ':TSUpdate',
     branch = 'main',
     config = function()
-      local parsers = { 'bash', 'c', 'diff', 'go', 'gomod', 'gosum', 'gotmpl', 'html', 'javascript', 'jsdoc', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'rust', 'toml', 'tsx', 'typescript', 'vim', 'vimdoc' }
+      local parsers = {
+        'bash',
+        'c',
+        'diff',
+        'go',
+        'gomod',
+        'gosum',
+        'gotmpl',
+        'html',
+        'javascript',
+        'jsdoc',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'query',
+        'rust',
+        'toml',
+        'tsx',
+        'typescript',
+        'vim',
+        'vimdoc',
+      }
       require('nvim-treesitter').install(parsers)
       vim.api.nvim_create_autocmd('FileType', {
         callback = function(args)

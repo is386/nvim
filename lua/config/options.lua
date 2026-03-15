@@ -18,7 +18,6 @@ vim.o.splitbelow = true
 vim.o.splitright = true
 vim.o.confirm = true
 
--- ERROR LENS
 vim.diagnostic.config {
   severity_sort = true,
   float = { border = 'rounded', source = 'if_many', max_width = 60 },
@@ -47,9 +46,7 @@ vim.diagnostic.config {
       local max_len = win_width - col - 15
       if max_len < 20 then max_len = 20 end
       local msg = diagnostic.message:gsub('\n', ' ')
-      if #msg > max_len then
-        return msg:sub(1, max_len - 3) .. '...'
-      end
+      if #msg > max_len then return msg:sub(1, max_len - 3) .. '...' end
       return msg
     end,
   },
