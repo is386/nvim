@@ -15,6 +15,7 @@ return {
           { '<leader>g', group = 'Git' },
           { '<leader>d', group = 'Split' },
           { '<leader>i', group = 'Info' },
+          { '<leader>c', group = 'Conflict' },
         },
       }
     end,
