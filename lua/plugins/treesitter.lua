@@ -27,6 +27,7 @@ return {
         'typescript',
         'vim',
         'vimdoc',
+        'vue',
       }
       require('nvim-treesitter').install(parsers)
       vim.api.nvim_create_autocmd('FileType', {

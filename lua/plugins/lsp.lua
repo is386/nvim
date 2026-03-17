@@ -19,7 +19,7 @@ return {
           vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { buffer = event.buf, desc = 'Go to Declaration' })
           vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, { buffer = event.buf, desc = 'Rename' })
           vim.keymap.set({ 'n', 'x' }, '<leader>.', vim.lsp.buf.code_action, { buffer = event.buf, desc = 'Code Actions' })
-          vim.keymap.set('n', '<leader>ii', function() vim.lsp.buf.hover { border = 'rounded', max_width = 60 } end, { buffer = event.buf, desc = 'Show Info' })
+          vim.keymap.set('n', '<leader>ii', function() vim.lsp.buf.hover { max_width = 60 } end, { buffer = event.buf, desc = 'Show Info' })
           vim.keymap.set('n', '<leader>ie', vim.diagnostic.open_float, { buffer = event.buf, desc = 'Show Error' })
 
           local client = vim.lsp.get_client_by_id(event.data.client_id)
@@ -49,32 +49,45 @@ return {
       })
 
       local servers = {
-        stylua = {},
-        eslint = {
-          on_attach = function(client, bufnr)
-            vim.api.nvim_buf_create_user_command(
-              bufnr,
-              'EslintFixAll',
-              function()
-                client:request_sync('workspace/executeCommand', {
-                  command = 'eslint.applyAllFixes',
-                  arguments = {
-                    {
-                      uri = vim.uri_from_bufnr(bufnr),
-                      version = vim.lsp.util.buf_versions[bufnr],
-                    },
+        vtsls = {
+          filetypes = { 'typescript', 'javascript', 'vue' },
+          settings = {
+            vtsls = {
+              tsserver = {
+                globalPlugins = {
+                  {
+                    name = '@vue/typescript-plugin',
+                    location = '',
+                    languages = { 'vue' },
+                    configNamespace = 'typescript',
+                    enableForWorkspaceTypeScriptVersions = true,
                   },
-                }, 1000, bufnr)
-              end,
-              { desc = 'Fix all ESLint errors' }
-            )
-
-            vim.api.nvim_create_autocmd('BufWritePre', {
-              buffer = bufnr,
-              command = 'EslintFixAll',
-            })
-          end,
+                },
+              },
+            },
+            typescript = {
+              inlayHints = {
+                parameterNames = { enabled = 'all' },
+                parameterTypes = { enabled = true },
+                variableTypes = { enabled = true },
+                propertyDeclarationTypes = { enabled = true },
+                functionLikeReturnTypes = { enabled = true },
+                enumMemberValues = { enabled = true },
+              },
+            },
+            javascript = {
+              inlayHints = {
+                parameterNames = { enabled = 'all' },
+                parameterTypes = { enabled = true },
+                variableTypes = { enabled = true },
+                propertyDeclarationTypes = { enabled = true },
+                functionLikeReturnTypes = { enabled = true },
+                enumMemberValues = { enabled = true },
+              },
+            },
+          },
         },
+        stylua = {},
         rust_analyzer = {
           settings = {
             ['rust-analyzer'] = {

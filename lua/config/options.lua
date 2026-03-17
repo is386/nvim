@@ -17,10 +17,11 @@ vim.o.scrolloff = 10
 vim.o.splitbelow = true
 vim.o.splitright = true
 vim.o.confirm = true
+vim.o.winborder = 'rounded'
 
 vim.diagnostic.config {
   severity_sort = true,
-  float = { border = 'rounded', source = 'if_many', max_width = 60 },
+  float = { source = 'if_many', max_width = 60 },
   underline = false,
   signs = {
     text = {
