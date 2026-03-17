@@ -29,7 +29,7 @@ return {
           vim.keymap.set('n', '<Esc>', function()
             vim.cmd 'diffoff!'
             vim.cmd 'only'
-            vim.keymap.del('n', '<Esc>')
+            RestoreEsc()
           end, { desc = 'Close Diff' })
         end,
         desc = 'Git Diff',
@@ -40,7 +40,7 @@ return {
           require('gitsigns').preview_hunk_inline()
           vim.keymap.set('n', '<Esc>', function()
             vim.api.nvim_exec_autocmds('CursorMoved', { buffer = 0 })
-            vim.keymap.del('n', '<Esc>')
+            RestoreEsc()
           end, { desc = 'Dismiss Preview' })
         end,
         desc = 'Git Preview Inline',
