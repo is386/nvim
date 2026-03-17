@@ -43,6 +43,11 @@ return {
       pcall(require('telescope').load_extension, 'fzf')
       pcall(require('telescope').load_extension, 'ui-select')
 
+      vim.api.nvim_set_hl(0, 'DiffAdd', { bg = '#2a3d2e' })
+      vim.api.nvim_set_hl(0, 'DiffChange', { bg = '#2a3d2e' })
+      vim.api.nvim_set_hl(0, 'DiffDelete', { bg = '#3d2a2d' })
+      vim.api.nvim_set_hl(0, 'DiffText', { bg = '#5e3a3a' })
+
       local builtin = require 'telescope.builtin'
       vim.keymap.set('n', '<leader>sa', function() builtin.live_grep { prompt_title = 'Search All' } end, { desc = 'Search All' })
       vim.keymap.set('n', '<leader>sf', function() builtin.find_files { prompt_title = 'Search Files' } end, { desc = 'Search Files' })

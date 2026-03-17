@@ -9,6 +9,7 @@ return {
         topdelete = { text = '━━' },
         changedelete = { text = '▎' },
       },
+      preview_config = { border = 'rounded' },
     },
     config = function(_, opts)
       require('gitsigns').setup(opts)
@@ -19,14 +20,28 @@ return {
       vim.api.nvim_set_hl(0, 'GitSignsDeleteVirtLnInLine', { bg = '#5e3a3a' })
     end,
     keys = {
+      { '<leader>gr', function() require('gitsigns').reset_hunk() end, desc = 'Git Reset Hunk' },
+      { '<leader>gb', function() require('gitsigns').blame_line() end, desc = 'Git Blame Line' },
       {
-        '<leader>gg',
+        '<leader>gD',
+        function()
+          require('gitsigns').diffthis()
+          vim.keymap.set('n', '<Esc>', function()
+            vim.cmd 'diffoff!'
+            vim.cmd 'only'
+            vim.keymap.del('n', '<Esc>')
+          end, { desc = 'Close Diff' })
+        end,
+        desc = 'Git Diff',
+      },
+      {
+        '<leader>gi',
         function()
           require('gitsigns').preview_hunk_inline()
           vim.keymap.set('n', '<Esc>', function()
             vim.api.nvim_exec_autocmds('CursorMoved', { buffer = 0 })
             vim.keymap.del('n', '<Esc>')
-          end, { desc = 'Dismiss hunk preview' })
+          end, { desc = 'Dismiss Preview' })
         end,
         desc = 'Git Preview Inline',
       },
