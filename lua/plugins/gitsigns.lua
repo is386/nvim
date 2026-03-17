@@ -9,7 +9,7 @@ return {
         topdelete = { text = '━━' },
         changedelete = { text = '▎' },
       },
-      preview_config = { border = 'rounded' },
+      preview_config = {},
     },
     config = function(_, opts)
       require('gitsigns').setup(opts)
