@@ -54,17 +54,19 @@ return {
       vim.keymap.set('n', '<leader>sr', function() builtin.oldfiles { prompt_title = 'Search Recent Files' } end, { desc = 'Search Recent Files' })
       vim.keymap.set({ 'n', 'v' }, '<leader>sw', function() builtin.grep_string { prompt_title = 'Search Current Word' } end, { desc = 'Search Current Word' })
       vim.keymap.set('n', '<leader>gs', function() builtin.git_status { prompt_title = 'Git Status' } end, { desc = 'Git Status' })
+      vim.keymap.set('n', '<leader>f', '/', { desc = 'Find' })
+      vim.keymap.set('n', '<leader>r', ':%s/', { desc = 'Replace' })
       vim.keymap.set(
         'n',
-        '<leader>f',
+        '<leader>sg',
         function()
           builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
             winblend = 0,
             previewer = false,
-            prompt_title = 'Find',
+            prompt_title = 'Search in File',
           })
         end,
-        { desc = 'Find' }
+        { desc = 'Search in File' }
       )
       vim.keymap.set(
         'n',

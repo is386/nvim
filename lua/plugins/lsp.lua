@@ -17,7 +17,7 @@ return {
         callback = function(event)
           vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = event.buf, desc = 'Go to Definition' })
           vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { buffer = event.buf, desc = 'Go to Declaration' })
-          vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, { buffer = event.buf, desc = 'Rename' })
+          vim.keymap.set('n', '<leader><F2>', vim.lsp.buf.rename, { buffer = event.buf, desc = 'Rename' })
           vim.keymap.set({ 'n', 'x' }, '<leader>.', vim.lsp.buf.code_action, { buffer = event.buf, desc = 'Code Actions' })
           vim.keymap.set('n', '<leader>ii', function() vim.lsp.buf.hover { max_width = 60 } end, { buffer = event.buf, desc = 'Show Info' })
           vim.keymap.set('n', '<leader>ie', vim.diagnostic.open_float, { buffer = event.buf, desc = 'Show Error' })
