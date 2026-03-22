@@ -5,8 +5,15 @@ RestoreEsc()
 
 vim.keymap.set('n', 'H', '^', { desc = 'Go to first non-blank character' })
 vim.keymap.set('n', 'L', '$', { desc = 'Go to end of line' })
-vim.keymap.set('n', '<leader>w', '<cmd>close<CR>', { desc = 'Close' })
 vim.keymap.set('n', '<leader>q', '<cmd>qa<CR>', { desc = 'Quit' })
+vim.keymap.set('n', '<leader>w', function()
+  local wins = vim.tbl_filter(function(w) return vim.api.nvim_win_get_config(w).relative == '' end, vim.api.nvim_tabpage_list_wins(0))
+  if #wins > 1 then
+    vim.cmd 'close'
+  else
+    vim.cmd 'enew'
+  end
+end, { desc = 'Close' })
 
 -- Recording
 vim.keymap.set('n', 'q', '<Nop>')
