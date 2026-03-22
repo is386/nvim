@@ -1,4 +1,5 @@
 -- General
+vim.keymap.set({ 'n', 'i' }, '<F1>', '<Nop>')
 function RestoreEsc() vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR><cmd>w<CR>') end
 RestoreEsc()
 
@@ -6,6 +7,10 @@ vim.keymap.set('n', 'H', '^', { desc = 'Go to first non-blank character' })
 vim.keymap.set('n', 'L', '$', { desc = 'Go to end of line' })
 vim.keymap.set('n', '<leader>w', '<cmd>close<CR>', { desc = 'Close' })
 vim.keymap.set('n', '<leader>q', '<cmd>qa<CR>', { desc = 'Quit' })
+
+-- Recording
+vim.keymap.set('n', 'q', '<Nop>')
+vim.keymap.set('n', '<C-q>', 'q', { desc = 'Record macro' })
 
 -- Splits
 vim.keymap.set('n', '<leader>dd', '<cmd>belowright split<CR>', { desc = 'Split Down' })
