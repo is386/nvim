@@ -19,6 +19,7 @@ vim.o.splitright = true
 vim.o.confirm = true
 vim.o.winborder = 'rounded'
 vim.o.cedit = ''
+vim.o.relativenumber = true
 
 vim.diagnostic.config {
   severity_sort = true,
