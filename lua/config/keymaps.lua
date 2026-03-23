@@ -1,11 +1,12 @@
 -- General
-vim.keymap.set({ 'n', 'i' }, '<F1>', '<Nop>')
 function RestoreEsc() vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR><cmd>w<CR>') end
 RestoreEsc()
 
+vim.keymap.set({ 'n', 'i' }, '<F1>', '<Nop>')
 vim.keymap.set('n', 'H', '^', { desc = 'Go to first non-blank character' })
 vim.keymap.set('n', 'L', '$', { desc = 'Go to end of line' })
 vim.keymap.set('n', '<leader>q', '<cmd>qa<CR>', { desc = 'Quit' })
+
 vim.keymap.set('n', '<leader>w', function()
   local wins = vim.tbl_filter(function(w) return vim.api.nvim_win_get_config(w).relative == '' end, vim.api.nvim_tabpage_list_wins(0))
   if #wins > 1 then
@@ -14,6 +15,8 @@ vim.keymap.set('n', '<leader>w', function()
     vim.cmd 'enew'
   end
 end, { desc = 'Close' })
+
+vim.keymap.set('n', '<leader>#', function() vim.o.relativenumber = not vim.o.relativenumber end, { desc = 'Toggle Relative Lines' })
 
 -- Recording
 vim.keymap.set('n', 'q', '<Nop>')
