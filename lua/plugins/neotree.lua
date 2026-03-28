@@ -20,8 +20,8 @@ return {
             renamed = 'R',
             untracked = 'U',
             ignored = 'I',
-            unstaged = '○',
-            staged = '●',
+            unstaged = '',
+            staged = '',
             conflict = 'C',
           },
         },
@@ -32,12 +32,6 @@ return {
           visible = true,
           hide_dotfiles = false,
           hide_gitignored = false,
-        },
-      },
-      window = {
-        width = 35,
-        mappings = {
-          ['<space>'] = 'none',
         },
       },
     },
