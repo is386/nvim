@@ -5,9 +5,6 @@ return {
   event = { 'InsertLeave', 'TextChanged' },
   opts = {
     noautocmd = true,
-    condition = function(buf)
-      return vim.bo[buf].buftype == ''
-    end,
   },
   config = function(_, opts)
     require('auto-save').setup(opts)

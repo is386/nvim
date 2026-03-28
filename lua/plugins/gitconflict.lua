@@ -1,8 +1,17 @@
+vim.api.nvim_create_autocmd('User', {
+  pattern = 'GitConflictDetected',
+  callback = function() vim.diagnostic.enable(false, { bufnr = vim.api.nvim_get_current_buf() }) end,
+})
+
+vim.api.nvim_create_autocmd('User', {
+  pattern = 'GitConflictResolved',
+  callback = function() vim.diagnostic.enable(true, { bufnr = vim.api.nvim_get_current_buf() }) end,
+})
+
 return {
   {
     'akinsho/git-conflict.nvim',
     version = '*',
-    event = 'VeryLazy',
     opts = {
       default_mappings = false,
       highlights = {
