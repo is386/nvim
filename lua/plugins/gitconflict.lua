@@ -15,10 +15,11 @@ return {
     opts = {
       default_mappings = false,
       highlights = {
-        current = 'DiffAdd',
-        incoming = 'DiffDelete',
+        current = 'GitConflictCurrent',
+        incoming = 'GitConflictIncoming',
       },
     },
+    event = { 'BufReadPre' },
     keys = {
       { '<leader>cc', '<Plug>(git-conflict-ours)', desc = 'Conflict: Choose Current' },
       { '<leader>ci', '<Plug>(git-conflict-theirs)', desc = 'Conflict: Choose Incoming' },
