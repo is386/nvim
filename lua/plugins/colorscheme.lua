@@ -13,6 +13,8 @@ return {
       vim.api.nvim_set_hl(0, 'TabLineSel', { fg = '#D8DEE9', bg = '#22262F' })
       vim.api.nvim_set_hl(0, 'TabLine', { fg = '#4C566A', bg = '#3B4252' })
       vim.api.nvim_set_hl(0, 'TabLineFill', { bg = '#3B4252' })
+      vim.api.nvim_set_hl(0, 'GitConflictCurrent', { bg = '#2E3B2E' })
+      vim.api.nvim_set_hl(0, 'GitConflictIncoming', { bg = '#2E3B4E' })
     end,
   },
 }
