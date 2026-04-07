@@ -1,5 +1,382 @@
-require 'config.autocmds'
-require 'config.diagnostic'
-require 'config.options'
-require 'config.keymaps'
-require 'config.lazy'
+-- TODO
+-- Telescope build
+-- Telescope signs
+-- Blink build
+-- Treesitter
+-- LSP
+
+vim.pack.add {
+  'https://github.com/okuuva/auto-save.nvim',
+  'https://github.com/saghen/blink.cmp',
+  'https://github.com/gbprod/nord.nvim',
+  'https://github.com/MunifTanjim/nui.nvim',
+  'https://github.com/nvim-lua/plenary.nvim',
+  'https://github.com/folke/which-key.nvim',
+  'https://github.com/nvim-tree/nvim-web-devicons',
+  'https://github.com/stevearc/conform.nvim',
+  'https://github.com/akinsho/git-conflict.nvim',
+  'https://github.com/lewis6991/gitsigns.nvim',
+  'https://github.com/nvim-lualine/lualine.nvim',
+  'https://github.com/nvim-mini/mini.nvim',
+  'https://github.com/petertriho/nvim-scrollbar',
+  'https://github.com/nvim-telescope/telescope-ui-select.nvim',
+  'https://github.com/nvim-telescope/telescope-fzf-native.nvim',
+  'https://github.com/nvim-telescope/telescope.nvim',
+  { src = 'https://github.com/ThePrimeagen/harpoon', version = 'harpoon2' },
+  { src = 'https://github.com/nvim-neo-tree/neo-tree.nvim', version = vim.version.range '3' },
+}
+
+require('auto-save').setup {
+  enabled = true,
+  noautocmd = true,
+}
+
+require('blink.cmp').setup {
+  keymap = {
+    preset = 'default',
+    ['<Tab>'] = { 'accept', 'fallback' },
+  },
+  completion = {
+    documentation = { auto_show = false },
+    menu = { border = 'none' },
+  },
+  sources = {
+    default = { 'lsp', 'path', 'snippets', 'buffer' },
+  },
+  fuzzy = { implementation = 'lua' },
+}
+
+require('conform').setup {
+  format_on_save = {
+    timeout_ms = 500,
+    lsp_format = 'fallback',
+  },
+  formatters_by_ft = {
+    go = { 'golines', 'goimports', 'gofumpt' },
+    javascript = { 'prettierd', 'prettier', stop_after_first = true },
+    lua = { 'stylua' },
+    markdown = { 'prettierd', 'prettier', stop_after_first = true },
+    python = { 'ruff' },
+    rust = { 'rustfmt' },
+    typescript = { 'prettierd', 'prettier', stop_after_first = true },
+    vue = { 'prettierd', 'prettier', stop_after_first = true },
+  },
+}
+
+local gitsigns = require 'gitsigns'
+gitsigns.setup {
+  signs = {
+    add = { text = '▎' },
+    change = { text = '▎' },
+    delete = { text = '━━' },
+    topdelete = { text = '━━' },
+    changedelete = { text = '▎' },
+  },
+}
+
+local harpoon = require 'harpoon'
+harpoon:setup {
+  settings = {
+    save_on_toggle = true,
+  },
+}
+
+require('lualine').setup {
+  options = {
+    theme = 'nord',
+    section_separators = '',
+    component_separators = '',
+  },
+  sections = {
+    lualine_a = { 'mode' },
+    lualine_b = { 'branch' },
+    lualine_c = { { 'filename', symbols = { modified = ' ●' } } },
+    lualine_x = {},
+    lualine_y = {},
+    lualine_z = {},
+  },
+  inactive_sections = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = { 'filename' },
+    lualine_x = {},
+    lualine_y = {},
+    lualine_z = {},
+  },
+}
+
+require('mini.move').setup()
+
+require('nord').setup {
+  on_colors = function(colors) colors.polar_night.origin = '#22262F' end,
+}
+
+require('neo-tree').setup {
+  default_component_configs = {
+    git_status = {
+      symbols = {
+        added = 'A',
+        deleted = 'D',
+        modified = 'M',
+        renamed = 'R',
+        untracked = 'U',
+        ignored = 'I',
+        unstaged = '',
+        staged = '',
+        conflict = 'C',
+      },
+    },
+  },
+  filesystem = {
+    follow_current_file = { enabled = true },
+    filtered_items = {
+      visible = true,
+      hide_dotfiles = false,
+      hide_gitignored = false,
+    },
+  },
+}
+
+require('scrollbar').setup {
+  handlers = { gitsigns = true },
+}
+
+local telescope = require 'telescope'
+local telescope_telescope_builtin = require 'telescope.builtin'
+telescope.setup {
+  defaults = {
+    file_ignore_patterns = {
+      '%.git/',
+      'node_modules/',
+      '%.DS_Store',
+      '__pycache__/',
+      '%.o',
+      '%.zip',
+      '%.tar%.gz',
+      '%.jpg',
+      '%.png',
+      '%.gif',
+      '%.pdf',
+    },
+  },
+  pickers = {
+    find_files = {
+      hidden = true,
+    },
+  },
+  extensions = {
+    ['ui-select'] = { require('telescope.themes').get_dropdown() },
+  },
+}
+pcall(telescope.load_extension, 'fzf')
+pcall(telescope.load_extension, 'ui-select')
+
+require('which-key').setup {
+  delay = 0,
+  icons = {
+    mappings = true,
+    rules = false,
+    separator = '',
+  },
+  spec = {
+    { '<leader>s', group = 'Search', mode = { 'n', 'v' } },
+    { '<leader>g', group = 'Git' },
+    { '<leader>d', group = 'Split' },
+    { '<leader>i', group = 'Info' },
+    { '<leader>c', group = 'Conflict' },
+  },
+}
+
+-- Options
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
+vim.o.breakindent = true
+vim.o.cedit = ''
+vim.o.clipboard = 'unnamedplus'
+vim.o.confirm = true
+vim.o.cursorline = true
+vim.o.ignorecase = true
+vim.o.inccommand = 'split'
+vim.o.mouse = 'a'
+vim.o.number = true
+vim.o.relativenumber = true
+vim.o.scrolloff = 10
+vim.o.showmode = false
+vim.o.signcolumn = 'yes'
+vim.o.smartcase = true
+vim.o.splitbelow = true
+vim.o.splitright = true
+vim.o.timeoutlen = 300
+vim.o.undofile = true
+vim.o.updatetime = 250
+vim.o.winborder = 'rounded'
+
+-- Colorscheme
+vim.cmd.colorscheme 'nord'
+vim.api.nvim_set_hl(0, '@comment', { fg = '#616e88', italic = false })
+vim.api.nvim_set_hl(0, 'Comment', { fg = '#616e88', italic = false })
+vim.api.nvim_set_hl(0, '@variable.parameter', { fg = '#D8DEE9' })
+vim.api.nvim_set_hl(0, 'TabLineSel', { fg = '#D8DEE9', bg = '#22262F' })
+vim.api.nvim_set_hl(0, 'TabLine', { fg = '#4C566A', bg = '#3B4252' })
+vim.api.nvim_set_hl(0, 'TabLineFill', { bg = '#3B4252' })
+vim.api.nvim_set_hl(0, 'GitSignsAddPreview', { bg = '#2a3d2e' })
+vim.api.nvim_set_hl(0, 'GitSignsAddInline', { bg = '#3a5e42' })
+vim.api.nvim_set_hl(0, 'GitSignsChangeInline', { bg = '#3a5e42' })
+vim.api.nvim_set_hl(0, 'GitSignsDeleteVirtLn', { bg = '#3d2a2d' })
+vim.api.nvim_set_hl(0, 'GitSignsDeleteVirtLnInLine', { bg = '#5e3a3a' })
+vim.api.nvim_set_hl(0, 'DiffAdd', { bg = '#2a3d2e' })
+vim.api.nvim_set_hl(0, 'DiffChange', { bg = '#2a3d2e' })
+vim.api.nvim_set_hl(0, 'DiffDelete', { bg = '#3d2a2d' })
+vim.api.nvim_set_hl(0, 'DiffText', { bg = '#5e3a3a' })
+
+-- Keymaps
+---- General
+function RestoreEsc() vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR><cmd>w<CR>') end
+RestoreEsc()
+vim.keymap.set({ 'n', 'i' }, '<F1>', '<Nop>')
+vim.keymap.set('n', 'H', '^', { desc = 'Go to first non-blank character' })
+vim.keymap.set('n', 'L', '$', { desc = 'Go to end of line' })
+vim.keymap.set('n', '<leader>#', function() vim.o.relativenumber = not vim.o.relativenumber end, { desc = 'Toggle Relative Lines' })
+vim.keymap.set('n', 'q', '<Nop>')
+vim.keymap.set('n', '<C-q>', 'q', { desc = 'Record macro' })
+vim.keymap.set('n', '<leader>f', '/', { desc = 'Find' })
+vim.keymap.set('n', '<leader>r', ':%s/', { desc = 'Replace' })
+
+---- Git Conflict
+vim.keymap.set('n', '<leader>cc', '<Plug>(git-conflict-ours)', { desc = 'Conflict: Choose Current' })
+vim.keymap.set('n', '<leader>ci', '<Plug>(git-conflict-theirs)', { desc = 'Conflict: Choose Incoming' })
+vim.keymap.set('n', '<leader>cb', '<Plug>(git-conflict-both)', { desc = 'Conflict: Choose Both' })
+vim.keymap.set('n', '<leader>c0', '<Plug>(git-conflict-none)', { desc = 'Conflict: Choose None' })
+vim.keymap.set('n', '<leader>cn', '<Plug>(git-conflict-next-conflict)', { desc = 'Conflict: Next' })
+vim.keymap.set('n', '<leader>cp', '<Plug>(git-conflict-prev-conflict)', { desc = 'Conflict: Previous' })
+
+---- Gitsigns
+vim.keymap.set('n', '<leader>gr', function() gitsigns.reset_hunk() end, { desc = 'Git Reset Hunk' })
+vim.keymap.set('n', '<leader>gb', function() gitsigns.blame_line() end, { desc = 'Git Blame Line' })
+vim.keymap.set('n', '<leader>gD', function()
+  gitsigns.diffthis()
+  vim.keymap.set('n', '<Esc>', function()
+    vim.cmd 'diffoff!'
+    vim.cmd 'only'
+    RestoreEsc()
+  end, { desc = 'Close Diff' })
+end, { desc = 'Git Diff' })
+vim.keymap.set('n', '<leader>gi', function()
+  gitsigns.preview_hunk_inline()
+  vim.keymap.set('n', '<Esc>', function()
+    vim.api.nvim_exec_autocmds('CursorMoved', { buffer = 0 })
+    RestoreEsc()
+  end, { desc = 'Dismiss Preview' })
+end, { desc = 'Git Preview Inline' })
+
+---- Harpoon
+vim.keymap.set('n', '<leader>a', function() harpoon:list():add() end, { desc = 'Add Harpoon' })
+vim.keymap.set('n', '<leader>m', function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = 'Harpoon Menu' })
+for i = 1, 9 do
+  vim.keymap.set('n', '<leader>' .. i, function() harpoon:list():select(i) end, { desc = 'which_key_ignore' })
+end
+vim.keymap.set('n', '<leader>0', function() harpoon:list():select(10) end, { desc = 'which_key_ignore' })
+
+---- NeoTree
+vim.keymap.set('n', '<leader>e', '<cmd>Neotree reveal float<cr>', { desc = 'Explorer' })
+
+---- Splits
+vim.keymap.set('n', '<leader>dd', '<cmd>belowright split<CR>', { desc = 'Split Down' })
+vim.keymap.set('n', '<leader>dr', '<cmd>belowright vsplit<CR>', { desc = 'Split Right' })
+vim.keymap.set('n', '<leader>du', '<cmd>above split<CR>', { desc = 'Split Up' })
+vim.keymap.set('n', '<leader>dl', '<cmd>leftabove vsplit<CR>', { desc = 'Split Left' })
+vim.keymap.set('n', '<leader>h', '<C-w>h', { desc = 'which_key_ignore' })
+vim.keymap.set('n', '<leader>j', '<C-w>j', { desc = 'which_key_ignore' })
+vim.keymap.set('n', '<leader>k', '<C-w>k', { desc = 'which_key_ignore' })
+vim.keymap.set('n', '<leader>l', '<C-w>l', { desc = 'which_key_ignore' })
+
+---- Telescope
+vim.keymap.set('n', '<leader>sa', function() telescope_builtin.live_grep { prompt_title = 'Search All' } end, { desc = 'Search All' })
+vim.keymap.set({ 'n', 'v' }, '<leader>sw', function() telescope_builtin.grep_string { prompt_title = 'Search Word All' } end, { desc = 'Search Word All' })
+vim.keymap.set('n', '<leader>gs', function() telescope_builtin.git_status { prompt_title = 'Git Status' } end, { desc = 'Git Status' })
+vim.keymap.set(
+  'n',
+  '<leader>sg',
+  function()
+    telescope_builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+      winblend = 0,
+      previewer = false,
+      prompt_title = 'Search in File',
+    })
+  end,
+  { desc = 'Search in File' }
+)
+
+-- Autocmds
+vim.api.nvim_create_autocmd('TextYankPost', {
+  desc = 'Highlight when yanking (copying) text',
+  group = vim.api.nvim_create_augroup('highlight-yank', { clear = true }),
+  callback = function() vim.hl.on_yank() end,
+})
+
+vim.api.nvim_create_autocmd('User', {
+  pattern = 'AutoSaveWritePost',
+  group = vim.api.nvim_create_augroup('autosave-notify', {}),
+  callback = function(ev)
+    if ev.data.saved_buffer ~= nil then vim.notify('Auto-saved at ' .. vim.fn.strftime '%I:%M:%S', vim.log.levels.INFO) end
+  end,
+})
+
+vim.api.nvim_create_autocmd('User', {
+  pattern = 'GitConflictDetected',
+  callback = function() vim.diagnostic.enable(false, { bufnr = vim.api.nvim_get_current_buf() }) end,
+})
+
+vim.api.nvim_create_autocmd('User', {
+  pattern = 'GitConflictResolved',
+  callback = function() vim.diagnostic.enable(true, { bufnr = vim.api.nvim_get_current_buf() }) end,
+})
+
+-- Diagnostic
+vim.diagnostic.config {
+  severity_sort = true,
+  float = { source = 'if_many', max_width = 60 },
+  underline = false,
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = '',
+      [vim.diagnostic.severity.WARN] = '',
+      [vim.diagnostic.severity.INFO] = '',
+      [vim.diagnostic.severity.HINT] = '',
+    },
+    linehl = {
+      [vim.diagnostic.severity.ERROR] = 'DiagnosticLineError',
+      [vim.diagnostic.severity.WARN] = 'DiagnosticLineWarn',
+      [vim.diagnostic.severity.INFO] = 'DiagnosticLineInfo',
+      [vim.diagnostic.severity.HINT] = 'DiagnosticLineHint',
+    },
+  },
+  virtual_text = {
+    source = 'if_many',
+    spacing = 2,
+    prefix = '',
+    format = function(diagnostic)
+      local win_width = vim.api.nvim_win_get_width(0)
+      local col = vim.api.nvim_win_get_cursor(0)[2]
+      local max_len = win_width - col - 15
+      if max_len < 20 then max_len = 20 end
+      local msg = diagnostic.message:gsub('\n', ' ')
+      if #msg > max_len then return msg:sub(1, max_len - 3) .. '...' end
+      return msg
+    end,
+  },
+}
+
+local function setup_diagnostic_highlights()
+  local error_hl = vim.api.nvim_get_hl(0, { name = 'DiagnosticVirtualTextError' })
+  local warn_hl = vim.api.nvim_get_hl(0, { name = 'DiagnosticVirtualTextWarn' })
+  local info_hl = vim.api.nvim_get_hl(0, { name = 'DiagnosticVirtualTextInfo' })
+
+  vim.api.nvim_set_hl(0, 'DiagnosticLineError', { bg = error_hl.bg })
+  vim.api.nvim_set_hl(0, 'DiagnosticLineWarn', { bg = warn_hl.bg })
+  vim.api.nvim_set_hl(0, 'DiagnosticLineInfo', { bg = info_hl.bg })
+  vim.api.nvim_set_hl(0, 'DiagnosticLineHint', { bg = warn_hl.bg })
+  vim.api.nvim_set_hl(0, 'DiagnosticVirtualTextHint', { fg = warn_hl.fg, bg = warn_hl.bg })
+end
+
+vim.api.nvim_create_autocmd('ColorScheme', { callback = setup_diagnostic_highlights })
