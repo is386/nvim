@@ -11,11 +11,11 @@ return {
           separator = '',
         },
         spec = {
-          { '<leader>s', group = 'Search', mode = { 'n', 'v' } },
-          { '<leader>g', group = 'Git' },
-          { '<leader>d', group = 'Split' },
-          { '<leader>i', group = 'Info' },
-          { '<leader>c', group = 'Conflict' },
+          { '<leader>s', group = 'search', mode = { 'n', 'v' } },
+          { '<leader>g', group = 'git' },
+          { '<leader>d', group = 'split' },
+          { '<leader>i', group = 'info' },
+          { '<leader>c', group = 'conflict' },
         },
       }
     end,
