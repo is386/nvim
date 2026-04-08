@@ -173,8 +173,18 @@ telescope.setup {
     ['ui-select'] = { require('telescope.themes').get_dropdown() },
   },
 }
-pcall(telescope.load_extension, 'fzf')
-pcall(telescope.load_extension, 'ui-select')
+local pack_base = vim.fn.stdpath 'data' .. '/site/pack'
+local fzf_paths = vim.fn.glob(pack_base .. '/*/opt/telescope-fzf-native.nvim', true, true)
+
+for _, path in ipairs(fzf_paths) do
+  local lib = path .. '/build/libfzf.so'
+  if vim.fn.filereadable(lib) == 0 then
+    vim.notify('Building telescope-fzf-native...', vim.log.levels.INFO)
+    vim.fn.system { 'make', '-C', path }
+  end
+end
+telescope.load_extension 'fzf'
+telescope.load_extension 'ui-select'
 
 require('which-key').setup {
   delay = 0,
