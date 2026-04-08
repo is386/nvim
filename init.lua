@@ -1,13 +1,6 @@
--- TODO
--- Telescope build
--- Telescope signs
--- Blink build
--- Treesitter
--- LSP
-
+-- Plugins
 vim.pack.add {
   'https://github.com/okuuva/auto-save.nvim',
-  'https://github.com/saghen/blink.cmp',
   'https://github.com/gbprod/nord.nvim',
   'https://github.com/MunifTanjim/nui.nvim',
   'https://github.com/nvim-lua/plenary.nvim',
@@ -22,8 +15,16 @@ vim.pack.add {
   'https://github.com/nvim-telescope/telescope-ui-select.nvim',
   'https://github.com/nvim-telescope/telescope-fzf-native.nvim',
   'https://github.com/nvim-telescope/telescope.nvim',
+  'https://github.com/tpope/vim-sleuth',
+  'https://github.com/neovim/nvim-lspconfig',
+  'https://github.com/mason-org/mason.nvim',
+  'https://github.com/mason-org/mason-lspconfig.nvim',
+  'https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim',
+  'https://github.com/j-hui/fidget.nvim',
+  { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range '1' },
   { src = 'https://github.com/ThePrimeagen/harpoon', version = 'harpoon2' },
   { src = 'https://github.com/nvim-neo-tree/neo-tree.nvim', version = vim.version.range '3' },
+  { src = 'https://github.com/nvim-treesitter/nvim-treesitter', version = 'main' },
 }
 
 require('auto-save').setup {
@@ -33,35 +34,14 @@ require('auto-save').setup {
 
 require('blink.cmp').setup {
   keymap = {
-    preset = 'default',
-    ['<Tab>'] = { 'accept', 'fallback' },
+    preset = 'super-tab',
   },
   completion = {
-    documentation = { auto_show = false },
     menu = { border = 'none' },
   },
-  sources = {
-    default = { 'lsp', 'path', 'snippets', 'buffer' },
-  },
-  fuzzy = { implementation = 'lua' },
 }
 
-require('conform').setup {
-  format_on_save = {
-    timeout_ms = 500,
-    lsp_format = 'fallback',
-  },
-  formatters_by_ft = {
-    go = { 'golines', 'goimports', 'gofumpt' },
-    javascript = { 'prettierd', 'prettier', stop_after_first = true },
-    lua = { 'stylua' },
-    markdown = { 'prettierd', 'prettier', stop_after_first = true },
-    python = { 'ruff' },
-    rust = { 'rustfmt' },
-    typescript = { 'prettierd', 'prettier', stop_after_first = true },
-    vue = { 'prettierd', 'prettier', stop_after_first = true },
-  },
-}
+require('fidget').setup {}
 
 local gitsigns = require 'gitsigns'
 gitsigns.setup {
@@ -137,12 +117,43 @@ require('neo-tree').setup {
   },
 }
 
+require('nvim-treesitter').setup {
+  ensure_installed = {
+    'bash',
+    'diff',
+    'go',
+    'gomod',
+    'gosum',
+    'gotmpl',
+    'html',
+    'javascript',
+    'jsdoc',
+    'lua',
+    'luadoc',
+    'markdown',
+    'markdown_inline',
+    'python',
+    'query',
+    'toml',
+    'typescript',
+    'vim',
+    'vimdoc',
+    'vue',
+  },
+  auto_install = true,
+  highlight = {
+    enable = true,
+  },
+  indent = {
+    enable = true,
+  },
+}
+
 require('scrollbar').setup {
   handlers = { gitsigns = true },
 }
 
 local telescope = require 'telescope'
-local telescope_telescope_builtin = require 'telescope.builtin'
 telescope.setup {
   defaults = {
     file_ignore_patterns = {
@@ -186,6 +197,130 @@ require('which-key').setup {
     { '<leader>c', group = 'Conflict' },
   },
 }
+
+-- Formatting + LSP
+local conform = require 'conform'
+conform.setup {
+  format_on_save = {
+    timeout_ms = 500,
+    lsp_format = 'fallback',
+  },
+  formatters_by_ft = {
+    go = { 'golines', 'goimports', 'gofumpt' },
+    javascript = { 'prettierd', 'prettier', stop_after_first = true },
+    lua = { 'stylua' },
+    markdown = { 'prettierd', 'prettier', stop_after_first = true },
+    python = { 'ruff' },
+    typescript = { 'prettierd', 'prettier', stop_after_first = true },
+    vue = { 'prettierd', 'prettier', stop_after_first = true },
+  },
+}
+
+local servers = {
+  basedpyright = {},
+
+  gopls = {
+    settings = {
+      gopls = {
+        analyses = {
+          unusedparams = true,
+        },
+        staticcheck = true,
+        gofumpt = true,
+      },
+    },
+  },
+
+  lua_ls = {
+    on_init = function(client)
+      if client.workspace_folders then
+        local path = client.workspace_folders[1].name
+        if path ~= vim.fn.stdpath 'config' and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then return end
+      end
+
+      client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+        runtime = {
+          version = 'LuaJIT',
+          path = {
+            'lua/?.lua',
+            'lua/?/init.lua',
+          },
+        },
+        workspace = {
+          checkThirdParty = false,
+          library = {
+            vim.env.VIMRUNTIME,
+          },
+        },
+      })
+    end,
+    settings = {
+      Lua = {},
+    },
+  },
+
+  vtsls = {
+    filetypes = { 'typescript', 'javascript', 'vue' },
+    settings = {
+      vtsls = {
+        autoUseWorkspaceTsdk = true,
+        tsserver = {
+          globalPlugins = {
+            {
+              name = '@vue/typescript-plugin',
+              location = vim.fn.stdpath 'data' .. '/mason/packages/vue-language-server/node_modules/@vue/typescript-plugin',
+              languages = { 'vue' },
+              configNamespace = 'typescript',
+              enableForWorkspaceTypeScriptVersions = true,
+            },
+          },
+        },
+      },
+      typescript = {
+        inlayHints = {
+          parameterNames = { enabled = 'all' },
+          parameterTypes = { enabled = true },
+          variableTypes = { enabled = true },
+          propertyDeclarationTypes = { enabled = true },
+          functionLikeReturnTypes = { enabled = true },
+          enumMemberValues = { enabled = true },
+        },
+      },
+      javascript = {
+        inlayHints = {
+          parameterNames = { enabled = 'all' },
+          parameterTypes = { enabled = true },
+          variableTypes = { enabled = true },
+          propertyDeclarationTypes = { enabled = true },
+          functionLikeReturnTypes = { enabled = true },
+          enumMemberValues = { enabled = true },
+        },
+      },
+    },
+  },
+
+  vue_ls = { init_options = { typescript = { tsdk = vim.fn.getcwd() .. '/node_modules/typescript/lib' } } },
+}
+
+local formatters = {}
+for _, tools in pairs(conform.formatters_by_ft) do
+  for _, tool in ipairs(tools) do
+    if type(tool) == 'string' then formatters[tool] = true end
+  end
+end
+
+local ensure_installed = vim.tbl_keys(servers or {})
+for tool in pairs(formatters) do
+  table.insert(ensure_installed, tool)
+end
+
+require('mason').setup {}
+require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+
+for name, server in pairs(servers) do
+  vim.lsp.config(name, server)
+  vim.lsp.enable(name)
+end
 
 -- Options
 vim.g.mapleader = ' '
@@ -253,6 +388,7 @@ vim.keymap.set('n', '<leader>cp', '<Plug>(git-conflict-prev-conflict)', { desc =
 ---- Gitsigns
 vim.keymap.set('n', '<leader>gr', function() gitsigns.reset_hunk() end, { desc = 'Git Reset Hunk' })
 vim.keymap.set('n', '<leader>gb', function() gitsigns.blame_line() end, { desc = 'Git Blame Line' })
+
 vim.keymap.set('n', '<leader>gD', function()
   gitsigns.diffthis()
   vim.keymap.set('n', '<Esc>', function()
@@ -261,6 +397,7 @@ vim.keymap.set('n', '<leader>gD', function()
     RestoreEsc()
   end, { desc = 'Close Diff' })
 end, { desc = 'Git Diff' })
+
 vim.keymap.set('n', '<leader>gi', function()
   gitsigns.preview_hunk_inline()
   vim.keymap.set('n', '<Esc>', function()
@@ -272,10 +409,10 @@ end, { desc = 'Git Preview Inline' })
 ---- Harpoon
 vim.keymap.set('n', '<leader>a', function() harpoon:list():add() end, { desc = 'Add Harpoon' })
 vim.keymap.set('n', '<leader>m', function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = 'Harpoon Menu' })
+vim.keymap.set('n', '<leader>0', function() harpoon:list():select(10) end, { desc = 'which_key_ignore' })
 for i = 1, 9 do
   vim.keymap.set('n', '<leader>' .. i, function() harpoon:list():select(i) end, { desc = 'which_key_ignore' })
 end
-vim.keymap.set('n', '<leader>0', function() harpoon:list():select(10) end, { desc = 'which_key_ignore' })
 
 ---- NeoTree
 vim.keymap.set('n', '<leader>e', '<cmd>Neotree reveal float<cr>', { desc = 'Explorer' })
@@ -291,21 +428,11 @@ vim.keymap.set('n', '<leader>k', '<C-w>k', { desc = 'which_key_ignore' })
 vim.keymap.set('n', '<leader>l', '<C-w>l', { desc = 'which_key_ignore' })
 
 ---- Telescope
-vim.keymap.set('n', '<leader>sa', function() telescope_builtin.live_grep { prompt_title = 'Search All' } end, { desc = 'Search All' })
-vim.keymap.set({ 'n', 'v' }, '<leader>sw', function() telescope_builtin.grep_string { prompt_title = 'Search Word All' } end, { desc = 'Search Word All' })
-vim.keymap.set('n', '<leader>gs', function() telescope_builtin.git_status { prompt_title = 'Git Status' } end, { desc = 'Git Status' })
-vim.keymap.set(
-  'n',
-  '<leader>sg',
-  function()
-    telescope_builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-      winblend = 0,
-      previewer = false,
-      prompt_title = 'Search in File',
-    })
-  end,
-  { desc = 'Search in File' }
-)
+local builtin = require 'telescope.builtin'
+vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = 'Search Files' })
+vim.keymap.set('n', '<leader>sa', builtin.live_grep, { desc = 'Search in All Files' })
+vim.keymap.set('n', '<leader>sr', builtin.oldfiles, { desc = 'Search Recent Files' })
+vim.keymap.set('n', '<leader>ss', builtin.lsp_document_symbols, { desc = 'Search Symbols' })
 
 -- Autocmds
 vim.api.nvim_create_autocmd('TextYankPost', {
@@ -330,6 +457,42 @@ vim.api.nvim_create_autocmd('User', {
 vim.api.nvim_create_autocmd('User', {
   pattern = 'GitConflictResolved',
   callback = function() vim.diagnostic.enable(true, { bufnr = vim.api.nvim_get_current_buf() }) end,
+})
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('lsp-attach', { clear = true }),
+  callback = function(event)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = event.buf, desc = 'Go to Definition' })
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { buffer = event.buf, desc = 'Go to Declaration' })
+    vim.keymap.set('n', '<leader><F2>', vim.lsp.buf.rename, { buffer = event.buf, desc = 'Rename' })
+    vim.keymap.set({ 'n', 'x' }, '<leader>.', vim.lsp.buf.code_action, { buffer = event.buf, desc = 'Code Actions' })
+    vim.keymap.set('n', '<leader>ii', function() vim.lsp.buf.hover { max_width = 60 } end, { buffer = event.buf, desc = 'Show Info' })
+    vim.keymap.set('n', '<leader>ie', vim.diagnostic.open_float, { buffer = event.buf, desc = 'Show Error' })
+
+    local client = vim.lsp.get_client_by_id(event.data.client_id)
+    if client and client:supports_method('textDocument/documentHighlight', event.buf) then
+      local highlight_augroup = vim.api.nvim_create_augroup('lsp-highlight', { clear = false })
+      vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+        buffer = event.buf,
+        group = highlight_augroup,
+        callback = vim.lsp.buf.document_highlight,
+      })
+
+      vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+        buffer = event.buf,
+        group = highlight_augroup,
+        callback = vim.lsp.buf.clear_references,
+      })
+
+      vim.api.nvim_create_autocmd('LspDetach', {
+        group = vim.api.nvim_create_augroup('lsp-detach', { clear = true }),
+        callback = function(event2)
+          vim.lsp.buf.clear_references()
+          vim.api.nvim_clear_autocmds { group = 'lsp-highlight', buffer = event2.buf }
+        end,
+      })
+    end
+  end,
 })
 
 -- Diagnostic
@@ -380,3 +543,4 @@ local function setup_diagnostic_highlights()
 end
 
 vim.api.nvim_create_autocmd('ColorScheme', { callback = setup_diagnostic_highlights })
+setup_diagnostic_highlights()
