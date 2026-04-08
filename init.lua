@@ -21,10 +21,10 @@ vim.pack.add {
   'https://github.com/mason-org/mason-lspconfig.nvim',
   'https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim',
   'https://github.com/j-hui/fidget.nvim',
+  'https://github.com/nvim-treesitter/nvim-treesitter',
   { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range '1' },
   { src = 'https://github.com/ThePrimeagen/harpoon', version = 'harpoon2' },
   { src = 'https://github.com/nvim-neo-tree/neo-tree.nvim', version = vim.version.range '3' },
-  { src = 'https://github.com/nvim-treesitter/nvim-treesitter', version = 'main' },
 }
 
 require('auto-save').setup {
@@ -117,31 +117,31 @@ require('neo-tree').setup {
   },
 }
 
-require('nvim-treesitter').setup {
-  ensure_installed = {
-    'bash',
-    'diff',
-    'go',
-    'gomod',
-    'gosum',
-    'gotmpl',
-    'html',
-    'javascript',
-    'jsdoc',
-    'lua',
-    'luadoc',
-    'markdown',
-    'markdown_inline',
-    'python',
-    'query',
-    'toml',
-    'typescript',
-    'vim',
-    'vimdoc',
-    'vue',
-  },
-  auto_install = true,
+local ts_ensure_installed = {
+  'bash',
+  'diff',
+  'go',
+  'gomod',
+  'gosum',
+  'gotmpl',
+  'html',
+  'javascript',
+  'jsdoc',
+  'lua',
+  'luadoc',
+  'markdown',
+  'markdown_inline',
+  'python',
+  'query',
+  'toml',
+  'typescript',
+  'vim',
+  'vimdoc',
+  'vue',
 }
+local ts_installed = require('nvim-treesitter.config').get_installed()
+local ts_to_install = vim.iter(ts_ensure_installed):filter(function(parser) return not vim.tbl_contains(ts_installed, parser) end):totable()
+require('nvim-treesitter').install(ts_to_install)
 
 require('scrollbar').setup {
   handlers = { gitsigns = true },
@@ -368,7 +368,6 @@ vim.keymap.set('n', 'L', '$', { desc = 'Go to end of line' })
 vim.keymap.set('n', '<leader>#', function() vim.o.relativenumber = not vim.o.relativenumber end, { desc = 'Toggle Relative Lines' })
 vim.keymap.set('n', 'q', '<Nop>')
 vim.keymap.set('n', '<C-q>', 'q', { desc = 'Record macro' })
-vim.keymap.set('n', '<leader>f', '/', { desc = 'Find' })
 vim.keymap.set('n', '<leader>r', ':%s/', { desc = 'Replace' })
 
 ---- Git Conflict
@@ -454,9 +453,9 @@ vim.api.nvim_create_autocmd('User', {
 })
 
 vim.api.nvim_create_autocmd('FileType', {
-  desc = 'Enable treesitter highlighting and indentation',
-  callback = function(ev)
-    if pcall(vim.treesitter.start, ev.buf) then vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()" end
+  callback = function()
+    pcall(vim.treesitter.start)
+    vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
   end,
 })
 
