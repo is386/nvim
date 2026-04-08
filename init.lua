@@ -141,12 +141,6 @@ require('nvim-treesitter').setup {
     'vue',
   },
   auto_install = true,
-  highlight = {
-    enable = true,
-  },
-  indent = {
-    enable = true,
-  },
 }
 
 require('scrollbar').setup {
@@ -457,6 +451,13 @@ vim.api.nvim_create_autocmd('User', {
 vim.api.nvim_create_autocmd('User', {
   pattern = 'GitConflictResolved',
   callback = function() vim.diagnostic.enable(true, { bufnr = vim.api.nvim_get_current_buf() }) end,
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  desc = 'Enable treesitter highlighting and indentation',
+  callback = function(ev)
+    if pcall(vim.treesitter.start, ev.buf) then vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()" end
+  end,
 })
 
 vim.api.nvim_create_autocmd('LspAttach', {
