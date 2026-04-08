@@ -12,17 +12,18 @@ git clone git@github.com:is386/nvim.git ~/.config/nvim
 
 ```sh
 mise use -g go node rust
-npm install -g @fsouza/prettierd
+npm install -g neovim tree-sitter-cli
+pip install pynvim
 ```
 
 ### Fedora
 
 ```sh
-sudo dnf install neovim fd-find luarocks bat
+sudo dnf install neovim fd-find luarocks bat ripgrep
 ```
 
 ### macOS
 
 ```sh
-brew install neovim fd tree-sitter-cli luarocks bat
+brew install neovim fd luarocks bat ripgrep
 ```
