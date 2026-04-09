@@ -7,7 +7,6 @@ vim.pack.add {
   'https://github.com/folke/which-key.nvim',
   'https://github.com/nvim-tree/nvim-web-devicons',
   'https://github.com/stevearc/conform.nvim',
-  'https://github.com/akinsho/git-conflict.nvim',
   'https://github.com/lewis6991/gitsigns.nvim',
   'https://github.com/nvim-lualine/lualine.nvim',
   'https://github.com/nvim-mini/mini.nvim',
@@ -22,6 +21,8 @@ vim.pack.add {
   'https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim',
   'https://github.com/j-hui/fidget.nvim',
   'https://github.com/nvim-treesitter/nvim-treesitter',
+  'https://github.com/OXY2DEV/markview.nvim',
+  { src = 'https://github.com/akinsho/git-conflict.nvim', version = '*' },
   { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range '1' },
   { src = 'https://github.com/ThePrimeagen/harpoon', version = 'harpoon2' },
   { src = 'https://github.com/nvim-neo-tree/neo-tree.nvim', version = vim.version.range '3' },
@@ -52,6 +53,10 @@ gitsigns.setup {
     topdelete = { text = '━━' },
     changedelete = { text = '▎' },
   },
+}
+
+require('git-conflict').setup {
+  default_mappings = false,
 }
 
 local harpoon = require 'harpoon'
@@ -367,6 +372,10 @@ vim.api.nvim_set_hl(0, 'DiffAdd', { bg = '#2a3d2e' })
 vim.api.nvim_set_hl(0, 'DiffChange', { bg = '#2a3d2e' })
 vim.api.nvim_set_hl(0, 'DiffDelete', { bg = '#3d2a2d' })
 vim.api.nvim_set_hl(0, 'DiffText', { bg = '#5e3a3a' })
+vim.api.nvim_set_hl(0, 'GitConflictCurrent', { bg = '#1d3b35' })
+vim.api.nvim_set_hl(0, 'GitConflictIncoming', { bg = '#1d3557' })
+vim.api.nvim_set_hl(0, 'GitConflictCurrentLabel', { bg = '#2d6b5e' })
+vim.api.nvim_set_hl(0, 'GitConflictIncomingLabel', { bg = '#2d5080' })
 
 -- Keymaps
 ---- General
