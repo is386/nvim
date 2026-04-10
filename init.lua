@@ -248,13 +248,13 @@ local servers = {
     },
   },
 
-  jdtls = {
-    cmd = {
-      vim.fn.stdpath 'data' .. '/mason/packages/jdtls/bin/jdtls',
-      '--java-executable',
-      '/Users/BKQ658/.local/share/mise/installs/java/corretto-21.0.10.7.1/bin/java',
-    },
-  },
+  -- jdtls = {
+  --   cmd = {
+  --     vim.fn.stdpath 'data' .. '/mason/packages/jdtls/bin/jdtls',
+  --     '--java-executable',
+  --     '/Users/BKQ658/.local/share/mise/installs/java/corretto-21.0.10.7.1/bin/java',
+  --   },
+  -- },
 
   jsonls = {
     settings = {
@@ -552,6 +552,47 @@ vim.api.nvim_create_autocmd('LspAttach', {
         end,
       })
     end
+  end,
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'java',
+  callback = function()
+    local jdtls = require 'jdtls'
+    local jdtls_setup = require 'jdtls.setup'
+
+    local root_dir = jdtls_setup.find_root {
+      '.git',
+      'mvnw',
+      'gradlew',
+      'pom.xml',
+      'build.gradle',
+      'settings.gradle',
+    }
+
+    if not root_dir then return end
+
+    local project_name = vim.fn.fnamemodify(root_dir, ':p:h:t')
+    local workspace_dir = vim.fn.stdpath 'data' .. '/jdtls-workspace/' .. project_name
+
+    local config = {
+      cmd = {
+        vim.fn.stdpath 'data' .. '/mason/packages/jdtls/bin/jdtls',
+      },
+
+      root_dir = root_dir,
+      workspace_folder = workspace_dir,
+
+      settings = {
+        java = {},
+      },
+
+      init_options = {
+        bundles = {},
+      },
+    }
+
+    jdtls.start_or_attach(config)
   end,
 })
 
