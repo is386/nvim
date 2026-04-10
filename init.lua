@@ -25,6 +25,7 @@ vim.pack.add {
   'https://github.com/mfussenegger/nvim-jdtls',
   'https://github.com/b0o/schemastore.nvim',
   'https://github.com/m4xshen/hardtime.nvim',
+  'https://github.com/karb94/neoscroll.nvim',
   { src = 'https://github.com/akinsho/git-conflict.nvim', version = '*' },
   { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range '1' },
   { src = 'https://github.com/ThePrimeagen/harpoon', version = 'harpoon2' },
@@ -96,6 +97,8 @@ require('lualine').setup {
 }
 
 require('mini.move').setup()
+
+require('neoscroll').setup()
 
 require('nord').setup {
   on_colors = function(colors) colors.polar_night.origin = '#22262F' end,

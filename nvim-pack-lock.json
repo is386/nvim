@@ -64,6 +64,10 @@
       "src": "https://github.com/nvim-neo-tree/neo-tree.nvim",
       "version": "3.0.0 - 4.0.0"
     },
+    "neoscroll.nvim": {
+      "rev": "c8d29979cb0cb3a2437a8e0ae683fd82f340d3b8",
+      "src": "https://github.com/karb94/neoscroll.nvim"
+    },
     "nord.nvim": {
       "rev": "07647ad23e5b7fc1599a841dcd8f173b9aeb0419",
       "src": "https://github.com/gbprod/nord.nvim"
