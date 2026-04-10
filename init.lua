@@ -15,6 +15,7 @@ vim.pack.add {
   'https://github.com/nvim-telescope/telescope-fzf-native.nvim',
   'https://github.com/nvim-telescope/telescope.nvim',
   'https://github.com/tpope/vim-sleuth',
+  'https://github.com/neovim/nvim-lspconfig',
   'https://github.com/mason-org/mason.nvim',
   'https://github.com/mason-org/mason-lspconfig.nvim',
   'https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim',
@@ -414,12 +415,13 @@ vim.api.nvim_set_hl(0, 'GitConflictIncomingLabel', { bg = '#2d5080' })
 function RestoreEsc() vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR><cmd>w<CR>') end
 RestoreEsc()
 vim.keymap.set({ 'n', 'i' }, '<F1>', '<Nop>')
-vim.keymap.set('n', 'H', '^', { desc = 'Go to first non-blank character' })
-vim.keymap.set('n', 'L', '$', { desc = 'Go to end of line' })
+vim.keymap.set('n', 'H', '^')
+vim.keymap.set('n', 'L', '$')
 vim.keymap.set('n', '<leader>#', function() vim.o.relativenumber = not vim.o.relativenumber end, { desc = 'Toggle Relative Lines' })
 vim.keymap.set('n', 'q', '<Nop>')
-vim.keymap.set('n', '<C-q>', 'q', { desc = 'Record macro' })
+vim.keymap.set('n', '<C-q>', 'q')
 vim.keymap.set('n', '<leader>r', ':%s/', { desc = 'Replace' })
+vim.keymap.set('v', 'p', 'P')
 
 ---- Git Conflict
 vim.keymap.set('n', '<leader>cc', '<Plug>(git-conflict-ours)', { desc = 'Conflict: Choose Current' })
@@ -564,13 +566,13 @@ vim.api.nvim_create_autocmd('FileType', {
 
     local project_name = vim.fn.fnamemodify(root_dir, ':p:h:t')
     local workspace_dir = vim.fn.stdpath 'data' .. '/jdtls-workspace/' .. project_name
-    local jdk21 = '/Users/BKQ658/.local/share/mise/installs/java/corretto-21.0.10.7.1'
+    local java_home = vim.env.JDTLS_JAVA_HOME or vim.env.JAVA_HOME
 
     local config = {
       cmd = {
         vim.fn.stdpath 'data' .. '/mason/packages/jdtls/bin/jdtls',
         '--java-executable',
-        jdk21 .. '/bin/java',
+        java_home .. '/bin/java',
         '-data',
         workspace_dir,
       },
