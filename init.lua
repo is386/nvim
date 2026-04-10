@@ -15,7 +15,6 @@ vim.pack.add {
   'https://github.com/nvim-telescope/telescope-fzf-native.nvim',
   'https://github.com/nvim-telescope/telescope.nvim',
   'https://github.com/tpope/vim-sleuth',
-  'https://github.com/neovim/nvim-lspconfig',
   'https://github.com/mason-org/mason.nvim',
   'https://github.com/mason-org/mason-lspconfig.nvim',
   'https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim',
@@ -571,15 +570,13 @@ vim.api.nvim_create_autocmd('FileType', {
     local config = {
       cmd = {
         vim.fn.stdpath 'data' .. '/mason/packages/jdtls/bin/jdtls',
-      },
-
-      cmd_env = {
-        JAVA_HOME = jdk21,
-        PATH = jdk21 .. '/bin:' .. vim.env.PATH,
+        '--java-executable',
+        jdk21 .. '/bin/java',
+        '-data',
+        workspace_dir,
       },
 
       root_dir = root_dir,
-      workspace_folder = workspace_dir,
 
       settings = {
         java = {},
