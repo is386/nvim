@@ -387,6 +387,11 @@ vim.o.timeoutlen = 300
 vim.o.undofile = true
 vim.o.updatetime = 250
 vim.o.winborder = 'rounded'
+vim.filetype.add {
+  filename = {
+    Bogiefile = 'yaml',
+  },
+}
 
 -- Colorscheme
 vim.cmd.colorscheme 'nord'
