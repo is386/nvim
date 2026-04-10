@@ -546,11 +546,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end,
 })
 
-local jdtls = require 'jdtls'
-local jdtls_setup = require 'jdtls.setup'
 vim.api.nvim_create_autocmd('FileType', {
   pattern = 'java',
   callback = function()
+    local jdtls = require 'jdtls'
+    local jdtls_setup = require 'jdtls.setup'
     local root_dir = jdtls_setup.find_root {
       '.git',
       'mvnw',
@@ -564,7 +564,6 @@ vim.api.nvim_create_autocmd('FileType', {
 
     local project_name = vim.fn.fnamemodify(root_dir, ':p:h:t')
     local workspace_dir = vim.fn.stdpath 'data' .. '/jdtls-workspace/' .. project_name
-
     local jdk21 = '/Users/BKQ658/.local/share/mise/installs/java/corretto-21.0.10.7.1'
 
     local config = {
@@ -575,13 +574,10 @@ vim.api.nvim_create_autocmd('FileType', {
         '-data',
         workspace_dir,
       },
-
       root_dir = root_dir,
-
       settings = {
         java = {},
       },
-
       init_options = {},
     }
 
