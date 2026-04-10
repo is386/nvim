@@ -221,20 +221,27 @@ conform.setup {
     return { timeout_ms = 500, lsp_format = 'fallback' }
   end,
   formatters_by_ft = {
+    bash = { 'shfmt' },
     go = { 'golines', 'goimports', 'gofumpt' },
     javascript = { 'prettierd', 'prettier', stop_after_first = true },
     json = { 'prettierd', 'prettier', stop_after_first = true },
     lua = { 'stylua' },
     markdown = { 'prettierd', 'prettier', stop_after_first = true },
     python = { 'ruff' },
+    sh = { 'shfmt' },
     typescript = { 'prettierd', 'prettier', stop_after_first = true },
     vue = { 'prettierd', 'prettier', stop_after_first = true },
     yaml = { 'prettierd', 'prettier', stop_after_first = true },
+    zsh = { 'shfmt' },
   },
 }
 
 local servers = {
   basedpyright = {},
+
+  bashls = {
+    filetypes = { 'sh', 'bash', 'zsh' },
+  },
 
   gopls = {
     settings = {
