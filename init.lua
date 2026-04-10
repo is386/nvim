@@ -22,6 +22,8 @@ vim.pack.add {
   'https://github.com/j-hui/fidget.nvim',
   'https://github.com/nvim-treesitter/nvim-treesitter',
   'https://github.com/OXY2DEV/markview.nvim',
+  'https://github.com/mfussenegger/nvim-jdtls',
+  'https://github.com/b0o/schemastore.nvim',
   { src = 'https://github.com/akinsho/git-conflict.nvim', version = '*' },
   { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range '1' },
   { src = 'https://github.com/ThePrimeagen/harpoon', version = 'harpoon2' },
@@ -130,8 +132,11 @@ local ts_ensure_installed = {
   'gosum',
   'gotmpl',
   'html',
+  'java',
   'javascript',
   'jsdoc',
+  'json',
+  'jsonc',
   'lua',
   'luadoc',
   'markdown',
@@ -143,6 +148,8 @@ local ts_ensure_installed = {
   'vim',
   'vimdoc',
   'vue',
+  'yaml',
+  'xml',
 }
 local ts_installed = require('nvim-treesitter.config').get_installed()
 local ts_to_install = vim.iter(ts_ensure_installed):filter(function(parser) return not vim.tbl_contains(ts_installed, parser) end):totable()
@@ -216,12 +223,16 @@ conform.setup {
   },
   formatters_by_ft = {
     go = { 'golines', 'goimports', 'gofumpt' },
+    java = { 'google-java-format' },
     javascript = { 'prettierd', 'prettier', stop_after_first = true },
+    json = { 'prettierd', 'prettier', stop_after_first = true },
+    jsonc = { 'prettierd', 'prettier', stop_after_first = true },
     lua = { 'stylua' },
     markdown = { 'prettierd', 'prettier', stop_after_first = true },
     python = { 'ruff' },
     typescript = { 'prettierd', 'prettier', stop_after_first = true },
     vue = { 'prettierd', 'prettier', stop_after_first = true },
+    yaml = { 'prettierd', 'prettier', stop_after_first = true },
   },
 }
 
@@ -239,6 +250,19 @@ local servers = {
       },
     },
   },
+
+  jdtls = {},
+
+  jsonls = {
+    settings = {
+      json = {
+        schemas = require('schemastore').json.schemas(),
+        validate = { enable = true },
+      },
+    },
+  },
+
+  lemminx = {},
 
   lua_ls = {
     on_init = function(client)
@@ -309,6 +333,15 @@ local servers = {
   },
 
   vue_ls = { init_options = { typescript = { tsdk = vim.fn.getcwd() .. '/node_modules/typescript/lib' } } },
+
+  yamlls = {
+    settings = {
+      yaml = {
+        schemaStore = { enable = false, url = '' },
+        schemas = require('schemastore').yaml.schemas(),
+      },
+    },
+  },
 }
 
 local formatters = {}
@@ -359,6 +392,8 @@ vim.o.winborder = 'rounded'
 vim.cmd.colorscheme 'nord'
 vim.api.nvim_set_hl(0, '@comment', { fg = '#616e88', italic = false })
 vim.api.nvim_set_hl(0, 'Comment', { fg = '#616e88', italic = false })
+vim.api.nvim_set_hl(0, '@property', { fg = '#88C0D0' })
+vim.api.nvim_set_hl(0, '@string', { fg = '#A3BE8C' })
 vim.api.nvim_set_hl(0, '@variable.parameter', { fg = '#D8DEE9' })
 vim.api.nvim_set_hl(0, 'TabLineSel', { fg = '#D8DEE9', bg = '#22262F' })
 vim.api.nvim_set_hl(0, 'TabLine', { fg = '#4C566A', bg = '#3B4252' })
