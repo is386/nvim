@@ -24,6 +24,7 @@ vim.pack.add {
   'https://github.com/OXY2DEV/markview.nvim',
   'https://github.com/mfussenegger/nvim-jdtls',
   'https://github.com/b0o/schemastore.nvim',
+  'https://github.com/m4xshen/hardtime.nvim',
   { src = 'https://github.com/akinsho/git-conflict.nvim', version = '*' },
   { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range '1' },
   { src = 'https://github.com/ThePrimeagen/harpoon', version = 'harpoon2' },
@@ -60,6 +61,8 @@ gitsigns.setup {
 require('git-conflict').setup {
   default_mappings = false,
 }
+
+require('hardtime').setup()
 
 local harpoon = require 'harpoon'
 harpoon:setup {
