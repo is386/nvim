@@ -250,7 +250,7 @@ local servers = {
 
   jdtls = {
     cmd = {
-      vim.fn.stdpath 'data' .. '/mason/packages/jdtls/bin/jdtls, ',
+      vim.fn.stdpath 'data' .. '/mason/packages/jdtls/bin/jdtls',
       '--java-executable',
       '/Users/BKQ658/.local/share/mise/installs/java/corretto-21.0.10.7.1/bin/java',
     },
