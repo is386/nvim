@@ -216,13 +216,12 @@ require('which-key').setup {
 -- Formatting + LSP
 local conform = require 'conform'
 conform.setup {
-  format_on_save = {
-    timeout_ms = 500,
-    lsp_format = 'fallback',
-  },
+  format_on_save = function(bufnr)
+    if vim.bo[bufnr].filetype == 'java' then return false end
+    return { timeout_ms = 500, lsp_format = 'fallback' }
+  end,
   formatters_by_ft = {
     go = { 'golines', 'goimports', 'gofumpt' },
-    java = { 'google-java-format' },
     javascript = { 'prettierd', 'prettier', stop_after_first = true },
     json = { 'prettierd', 'prettier', stop_after_first = true },
     lua = { 'stylua' },
@@ -249,7 +248,13 @@ local servers = {
     },
   },
 
-  jdtls = {},
+  jdtls = {
+    cmd = {
+      vim.fn.stdpath 'data' .. '/mason/packages/jdtls/bin/jdtls, ',
+      '--java-executable',
+      '/Users/BKQ658/.local/share/mise/installs/java/corretto-21.0.10.7.1/bin/java',
+    },
+  },
 
   jsonls = {
     settings = {
