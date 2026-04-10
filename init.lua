@@ -148,7 +148,6 @@ local ts_ensure_installed = {
   'vimdoc',
   'vue',
   'yaml',
-  'xml',
 }
 local ts_installed = require('nvim-treesitter.config').get_installed()
 local ts_to_install = vim.iter(ts_ensure_installed):filter(function(parser) return not vim.tbl_contains(ts_installed, parser) end):totable()
