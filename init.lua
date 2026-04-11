@@ -63,7 +63,9 @@ require('git-conflict').setup {
   default_mappings = false,
 }
 
-require('hardtime').setup()
+require('hardtime').setup {
+  max_count = 10,
+}
 
 local harpoon = require 'harpoon'
 harpoon:setup {
