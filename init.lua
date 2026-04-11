@@ -75,7 +75,7 @@ harpoon:setup {
   },
 }
 
-require('lsp-signature').setup {}
+require('lsp_signature').setup { hint_enable = false }
 
 require('lualine').setup {
   options = {
@@ -429,8 +429,9 @@ vim.api.nvim_set_hl(0, 'GitConflictCurrent', { bg = '#1d3b35' })
 vim.api.nvim_set_hl(0, 'GitConflictIncoming', { bg = '#1d3557' })
 vim.api.nvim_set_hl(0, 'GitConflictCurrentLabel', { bg = '#2d6b5e' })
 vim.api.nvim_set_hl(0, 'GitConflictIncomingLabel', { bg = '#2d5080' })
-vim.api.nvim_set_hl(0, 'Search', { bg = '#616e88' })
-vim.api.nvim_set_hl(0, 'CurSearch', { bg = '#8aadf4' })
+vim.api.nvim_set_hl(0, 'Search', { bg = '#3B4252' })
+vim.api.nvim_set_hl(0, 'CurSearch', { bg = '#616e88', fg = '#D8DEE9' })
+vim.api.nvim_set_hl(0, 'IncSearch', { bg = '#616e88', fg = '#D8DEE9' })
 
 -- Keymaps
 ---- General
@@ -524,12 +525,20 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
-vim.api.nvim_create_autocmd('CursorHold', {
-  callback = function()
-    local diagnostics = vim.diagnostic.get(0, { lnum = vim.fn.line('.') - 1 })
-    if #diagnostics > 0 then
-      vim.diagnostic.open_float(nil, { focus = false })
+vim.api.nvim_create_autocmd({ 'CursorHold', 'DiagnosticChanged', 'InsertLeave' }, {
+  callback = function(event)
+    if event.event ~= 'InsertLeave' and vim.api.nvim_get_mode().mode:match 'i' then return end
+
+    local line = vim.fn.line '.' - 1
+
+    if event.event == 'CursorHold' then
+      if vim.b._last_diag_line == line then return end
+      vim.b._last_diag_line = line
     end
+
+    local diagnostics = vim.diagnostic.get(0, { lnum = line })
+
+    if #diagnostics > 0 then vim.diagnostic.open_float(nil, { focus = false }) end
   end,
 })
 
