@@ -27,6 +27,7 @@ vim.pack.add {
   'https://github.com/m4xshen/hardtime.nvim',
   'https://github.com/karb94/neoscroll.nvim',
   'https://github.com/ray-x/lsp_signature.nvim',
+  'https://github.com/christoomey/vim-tmux-navigator',
   { src = 'https://github.com/akinsho/git-conflict.nvim', version = '*' },
   { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range '1' },
   { src = 'https://github.com/ThePrimeagen/harpoon', version = 'harpoon2' },
@@ -65,7 +66,7 @@ require('git-conflict').setup {
 }
 
 require('hardtime').setup {
-  max_count = 10,
+  max_count = 15,
 }
 
 local harpoon = require 'harpoon'
@@ -227,6 +228,8 @@ require('which-key').setup {
     { '<leader>c', group = 'Conflict' },
   },
 }
+
+-- require('vim-tmux-navigator').setup {}
 
 -- Formatting + LSP
 local conform = require 'conform'
@@ -494,6 +497,17 @@ vim.keymap.set('n', '<leader>sr', builtin.oldfiles, { desc = 'Search Recent File
 vim.keymap.set('n', '<leader>ss', builtin.lsp_document_symbols, { desc = 'Search Symbols' })
 
 -- Autocmds
+vim.api.nvim_create_autocmd({ 'VimLeave', 'VimSuspend' }, {
+  pattern = '*',
+  callback = function()
+    -- vim.cmd([[set guicursor=a:ver100-blinkwait1-blinkoff500-blinkon500]])
+
+    --https://github.com/microsoft/terminal/issues/13420#issuecomment-1501102143
+    vim.opt.guicursor = ''
+    vim.fn.chansend(vim.v.stderr, '\x1b[ q')
+  end,
+})
+
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('highlight-yank', { clear = true }),
