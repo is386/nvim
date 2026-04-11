@@ -379,6 +379,7 @@ end
 -- Options
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+vim.o.autoread = true
 vim.o.breakindent = true
 vim.o.cedit = ''
 vim.o.clipboard = 'unnamedplus'
@@ -425,6 +426,8 @@ vim.api.nvim_set_hl(0, 'GitConflictCurrent', { bg = '#1d3b35' })
 vim.api.nvim_set_hl(0, 'GitConflictIncoming', { bg = '#1d3557' })
 vim.api.nvim_set_hl(0, 'GitConflictCurrentLabel', { bg = '#2d6b5e' })
 vim.api.nvim_set_hl(0, 'GitConflictIncomingLabel', { bg = '#2d5080' })
+vim.api.nvim_set_hl(0, 'Search', { bg = '#616e88' })
+vim.api.nvim_set_hl(0, 'CurSearch', { bg = '#8aadf4' })
 
 -- Keymaps
 ---- General
