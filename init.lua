@@ -26,6 +26,7 @@ vim.pack.add {
   'https://github.com/b0o/schemastore.nvim',
   'https://github.com/m4xshen/hardtime.nvim',
   'https://github.com/karb94/neoscroll.nvim',
+  'https://github.com/ray-x/lsp_signature.nvim',
   { src = 'https://github.com/akinsho/git-conflict.nvim', version = '*' },
   { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range '1' },
   { src = 'https://github.com/ThePrimeagen/harpoon', version = 'harpoon2' },
@@ -73,6 +74,8 @@ harpoon:setup {
     save_on_toggle = true,
   },
 }
+
+require('lsp-signature').setup {}
 
 require('lualine').setup {
   options = {
