@@ -137,6 +137,7 @@ require('neo-tree').setup {
       hide_dotfiles = false,
       hide_gitignored = false,
     },
+    hijack_netrw_behavior = 'disabled',
   },
 }
 
@@ -228,8 +229,6 @@ require('which-key').setup {
     { '<leader>c', group = 'Conflict' },
   },
 }
-
--- require('vim-tmux-navigator').setup {}
 
 -- Formatting + LSP
 local conform = require 'conform'
@@ -385,6 +384,8 @@ end
 -- Options
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 vim.o.autoread = true
 vim.o.breakindent = true
 vim.o.cedit = ''
