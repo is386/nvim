@@ -386,15 +386,12 @@ vim.o.confirm = true
 vim.o.cursorline = true
 vim.o.ignorecase = true
 vim.o.inccommand = 'split'
-vim.o.mouse = 'a'
 vim.o.number = true
 vim.o.relativenumber = true
 vim.o.scrolloff = 10
 vim.o.showmode = false
 vim.o.signcolumn = 'yes'
 vim.o.smartcase = true
-vim.o.splitbelow = true
-vim.o.splitright = true
 vim.o.timeoutlen = 300
 vim.o.undofile = true
 vim.o.updatetime = 250
@@ -481,16 +478,6 @@ end
 
 ---- NeoTree
 vim.keymap.set('n', '<leader>e', '<cmd>Neotree reveal float<cr>', { desc = 'Explorer' })
-
----- Splits
-vim.keymap.set('n', '<leader>dd', '<cmd>belowright split<CR>', { desc = 'Split Down' })
-vim.keymap.set('n', '<leader>dr', '<cmd>belowright vsplit<CR>', { desc = 'Split Right' })
-vim.keymap.set('n', '<leader>du', '<cmd>above split<CR>', { desc = 'Split Up' })
-vim.keymap.set('n', '<leader>dl', '<cmd>leftabove vsplit<CR>', { desc = 'Split Left' })
-vim.keymap.set('n', '<leader>h', '<C-w>h', { desc = 'which_key_ignore' })
-vim.keymap.set('n', '<leader>j', '<C-w>j', { desc = 'which_key_ignore' })
-vim.keymap.set('n', '<leader>k', '<C-w>k', { desc = 'which_key_ignore' })
-vim.keymap.set('n', '<leader>l', '<C-w>l', { desc = 'which_key_ignore' })
 
 ---- Telescope
 local builtin = require 'telescope.builtin'
