@@ -521,6 +521,15 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
+vim.api.nvim_create_autocmd('CursorHold', {
+  callback = function()
+    local diagnostics = vim.diagnostic.get(0, { lnum = vim.fn.line('.') - 1 })
+    if #diagnostics > 0 then
+      vim.diagnostic.open_float(nil, { focus = false })
+    end
+  end,
+})
+
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('lsp-attach', { clear = true }),
   callback = function(event)
@@ -528,8 +537,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { buffer = event.buf, desc = 'Go to Declaration' })
     vim.keymap.set('n', '<leader><F2>', vim.lsp.buf.rename, { buffer = event.buf, desc = 'Rename' })
     vim.keymap.set({ 'n', 'x' }, '<leader>.', vim.lsp.buf.code_action, { buffer = event.buf, desc = 'Code Actions' })
-    vim.keymap.set('n', '<leader>ii', function() vim.lsp.buf.hover { max_width = 60 } end, { buffer = event.buf, desc = 'Show Info' })
-    vim.keymap.set('n', '<leader>ie', vim.diagnostic.open_float, { buffer = event.buf, desc = 'Show Error' })
+    vim.keymap.set('n', '<leader>i', function() vim.lsp.buf.hover { max_width = 60 } end, { buffer = event.buf, desc = 'Show Info' })
 
     local client = vim.lsp.get_client_by_id(event.data.client_id)
     if client and client:supports_method('textDocument/documentHighlight', event.buf) then
