@@ -497,17 +497,6 @@ vim.keymap.set('n', '<leader>sr', builtin.oldfiles, { desc = 'Search Recent File
 vim.keymap.set('n', '<leader>ss', builtin.lsp_document_symbols, { desc = 'Search Symbols' })
 
 -- Autocmds
-vim.api.nvim_create_autocmd({ 'VimLeave', 'VimSuspend' }, {
-  pattern = '*',
-  callback = function()
-    -- vim.cmd([[set guicursor=a:ver100-blinkwait1-blinkoff500-blinkon500]])
-
-    --https://github.com/microsoft/terminal/issues/13420#issuecomment-1501102143
-    vim.opt.guicursor = ''
-    vim.fn.chansend(vim.v.stderr, '\x1b[ q')
-  end,
-})
-
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('highlight-yank', { clear = true }),
