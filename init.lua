@@ -96,6 +96,10 @@ require('lualine').setup {
   },
 }
 
+require('markview').setup {
+  preview = { enable = false },
+}
+
 require('mini.move').setup()
 
 require('neoscroll').setup()
