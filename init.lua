@@ -69,6 +69,7 @@ require('git-conflict').setup {
 }
 
 require('hardtime').setup {
+  disable_mouse = false,
   max_count = 15,
 }
 
@@ -397,6 +398,7 @@ vim.o.confirm = true
 vim.o.cursorline = true
 vim.o.ignorecase = true
 vim.o.inccommand = 'split'
+vim.o.mouse = 'a'
 vim.o.number = true
 vim.o.relativenumber = true
 vim.o.scrolloff = 10
