@@ -28,6 +28,7 @@ vim.pack.add {
   'https://github.com/karb94/neoscroll.nvim',
   'https://github.com/ray-x/lsp_signature.nvim',
   'https://github.com/christoomey/vim-tmux-navigator',
+  'https://github.com/rmagatti/auto-session',
   { src = 'https://github.com/akinsho/git-conflict.nvim', version = '*' },
   { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range '1' },
   { src = 'https://github.com/ThePrimeagen/harpoon', version = 'harpoon2' },
@@ -38,6 +39,8 @@ require('auto-save').setup {
   enabled = true,
   noautocmd = true,
 }
+
+require('auto-session').setup {}
 
 require('blink.cmp').setup {
   keymap = {
