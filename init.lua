@@ -40,7 +40,16 @@ require('auto-save').setup {
   noautocmd = true,
 }
 
-require('auto-session').setup {}
+require('auto-session').setup {
+  post_restore_cmds = {
+    function()
+      for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        local name = vim.api.nvim_buf_get_name(buf)
+        if name ~= '' and vim.fn.filereadable(name) == 10 and not name:match '^%w+://' then vim.api.nvim_buf_delete(buf, { force = true }) end
+      end
+    end,
+  },
+}
 
 require('blink.cmp').setup {
   keymap = {
@@ -231,6 +240,7 @@ require('which-key').setup {
     { '<leader>d', group = 'Split' },
     { '<leader>i', group = 'Info' },
     { '<leader>c', group = 'Conflict' },
+    { '<leader>h', group = 'Harpoon' },
   },
 }
 
@@ -239,7 +249,7 @@ local conform = require 'conform'
 conform.setup {
   format_on_save = function(bufnr)
     if vim.bo[bufnr].filetype == 'java' then return false end
-    return { timeout_ms = 500, lsp_format = 'fallback' }
+    return { timeout_ms = 2500, lsp_format = 'fallback' }
   end,
   formatters_by_ft = {
     bash = { 'shfmt' },
@@ -444,7 +454,7 @@ vim.api.nvim_set_hl(0, 'IncSearch', { bg = '#616e88', fg = '#D8DEE9' })
 
 -- Keymaps
 ---- General
-function RestoreEsc() vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR><cmd>w<CR>') end
+function RestoreEsc() vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR><cmd>checktime<CR><cmd>w<CR>') end
 RestoreEsc()
 vim.keymap.set({ 'n', 'i' }, '<F1>', '<Nop>')
 vim.keymap.set('n', 'H', '^')
@@ -466,6 +476,8 @@ vim.keymap.set('n', '<leader>cp', '<Plug>(git-conflict-prev-conflict)', { desc =
 ---- Gitsigns
 vim.keymap.set('n', '<leader>gr', function() gitsigns.reset_hunk() end, { desc = 'Git Reset Hunk' })
 vim.keymap.set('n', '<leader>gb', function() gitsigns.blame_line() end, { desc = 'Git Blame Line' })
+vim.keymap.set('n', '<leader>gn', function() gitsigns.nav_hunk 'next' end, { desc = 'Next Git Hunk' })
+vim.keymap.set('n', '<leader>gN', function() gitsigns.nav_hunk 'prev' end, { desc = 'Prev Git Hunk' })
 
 vim.keymap.set('n', '<leader>gD', function()
   gitsigns.diffthis()
@@ -485,8 +497,8 @@ vim.keymap.set('n', '<leader>gi', function()
 end, { desc = 'Git Preview Inline' })
 
 ---- Harpoon
-vim.keymap.set('n', '<leader>a', function() harpoon:list():add() end, { desc = 'Add Harpoon' })
-vim.keymap.set('n', '<leader>m', function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = 'Harpoon Menu' })
+vim.keymap.set('n', '<leader>ha', function() harpoon:list():add() end, { desc = 'Add Harpoon' })
+vim.keymap.set('n', '<leader>hh', function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = 'Harpoon Menu' })
 vim.keymap.set('n', '<leader>0', function() harpoon:list():select(10) end, { desc = 'which_key_ignore' })
 for i = 1, 9 do
   vim.keymap.set('n', '<leader>' .. i, function() harpoon:list():select(i) end, { desc = 'which_key_ignore' })
@@ -501,6 +513,7 @@ vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = 'Search Files' })
 vim.keymap.set('n', '<leader>sa', builtin.live_grep, { desc = 'Search in All Files' })
 vim.keymap.set('n', '<leader>sr', builtin.oldfiles, { desc = 'Search Recent Files' })
 vim.keymap.set('n', '<leader>ss', builtin.lsp_document_symbols, { desc = 'Search Symbols' })
+vim.keymap.set('n', '<leader>sg', builtin.git_status, { desc = 'Search Git Changes' })
 
 -- Autocmds
 vim.api.nvim_create_autocmd('TextYankPost', {
@@ -555,7 +568,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('lsp-attach', { clear = true }),
   callback = function(event)
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = event.buf, desc = 'Go to Definition' })
-    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { buffer = event.buf, desc = 'Go to Declaration' })
+    vim.keymap.set('n', 'gD', builtin.lsp_references, { buffer = event.buf, desc = 'Go to Declaration' })
     vim.keymap.set('n', '<leader><F2>', vim.lsp.buf.rename, { buffer = event.buf, desc = 'Rename' })
     vim.keymap.set({ 'n', 'x' }, '<leader>.', vim.lsp.buf.code_action, { buffer = event.buf, desc = 'Code Actions' })
     vim.keymap.set('n', '<leader>i', function() vim.lsp.buf.hover { max_width = 60 } end, { buffer = event.buf, desc = 'Show Info' })
