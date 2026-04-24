@@ -204,6 +204,7 @@ telescope.setup {
       '%.gif',
       '%.pdf',
     },
+    path_display = { 'smart' },
   },
   pickers = {
     find_files = {
