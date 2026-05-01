@@ -472,7 +472,7 @@ vim.keymap.set('n', '<leader>ci', '<Plug>(git-conflict-theirs)', { desc = 'Confl
 vim.keymap.set('n', '<leader>cb', '<Plug>(git-conflict-both)', { desc = 'Conflict: Choose Both' })
 vim.keymap.set('n', '<leader>c0', '<Plug>(git-conflict-none)', { desc = 'Conflict: Choose None' })
 vim.keymap.set('n', '<leader>cn', '<Plug>(git-conflict-next-conflict)', { desc = 'Conflict: Next' })
-vim.keymap.set('n', '<leader>cp', '<Plug>(git-conflict-prev-conflict)', { desc = 'Conflict: Previous' })
+vim.keymap.set('n', '<leader>cN', '<Plug>(git-conflict-prev-conflict)', { desc = 'Conflict: Previous' })
 
 ---- Gitsigns
 vim.keymap.set('n', '<leader>gr', function() gitsigns.reset_hunk() end, { desc = 'Git Reset Hunk' })
