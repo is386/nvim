@@ -157,6 +157,9 @@ require('neo-tree').setup {
 local ts_ensure_installed = {
   'bash',
   'diff',
+  'gdscript',
+  'godot_resource',
+  'gdshader',
   'go',
   'gomod',
   'gosum',
