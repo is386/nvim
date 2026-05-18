@@ -245,7 +245,7 @@ require('which-key').setup {
   },
 }
 
--- Formatting + LSP
+-- Formatting
 local conform = require 'conform'
 conform.setup {
   format_on_save = function(bufnr)
@@ -268,11 +268,18 @@ conform.setup {
   },
 }
 
+-- LSP
 local servers = {
   basedpyright = {},
 
   bashls = {
     filetypes = { 'sh', 'bash', 'zsh' },
+  },
+
+  gdscript = {
+    cmd = vim.lsp.rpc.connect('127.0.0.1', tonumber(os.getenv 'GDScript_Port' or '6005')),
+    filetypes = { 'gd', 'gdscript', 'gdscript3' },
+    root_markers = { 'project.godot', '.git' },
   },
 
   gopls = {
@@ -383,7 +390,8 @@ for _, tools in pairs(conform.formatters_by_ft) do
   end
 end
 
-local ensure_installed = vim.tbl_keys(servers or {})
+local skip = { gdscript = true }
+local ensure_installed = vim.tbl_filter(function(k) return not skip[k] end, vim.tbl_keys(servers or {}))
 for tool in pairs(formatters) do
   table.insert(ensure_installed, tool)
 end
@@ -638,6 +646,23 @@ vim.api.nvim_create_autocmd('FileType', {
     jdtls.start_or_attach(config)
   end,
 })
+
+-- Godot Server
+local paths_to_check = { '/', '/../' }
+local is_godot_project = false
+local godot_project_path = ''
+local cwd = vim.fn.getcwd()
+
+for key, value in pairs(paths_to_check) do
+  if vim.uv.fs_stat(cwd .. value .. 'project.godot') then
+    is_godot_project = true
+    godot_project_path = cwd .. value
+    break
+  end
+end
+
+local is_server_running = vim.uv.fs_stat(godot_project_path .. '/server.pipe')
+if is_godot_project and not is_server_running then vim.fn.serverstart(godot_project_path .. '/server.pipe') end
 
 -- Diagnostic
 vim.diagnostic.config {
