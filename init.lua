@@ -29,7 +29,7 @@ vim.pack.add {
   'https://github.com/ray-x/lsp_signature.nvim',
   'https://github.com/christoomey/vim-tmux-navigator',
   'https://github.com/rmagatti/auto-session',
-  { src = 'https://github.com/akinsho/git-conflict.nvim', version = '*' },
+  { src = 'https://github.com/akinsho/git-conflict.nvim', version = 'v2.1.0' },
   { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range '1' },
   { src = 'https://github.com/ThePrimeagen/harpoon', version = 'harpoon2' },
   { src = 'https://github.com/nvim-neo-tree/neo-tree.nvim', version = vim.version.range '3' },
