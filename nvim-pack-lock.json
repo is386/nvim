@@ -24,7 +24,7 @@
     "git-conflict.nvim": {
       "rev": "a1badcd070d176172940eb55d9d59029dad1c5a6",
       "src": "https://github.com/akinsho/git-conflict.nvim",
-      "version": "'*'"
+      "version": "'v2.1.0'"
     },
     "gitsigns.nvim": {
       "rev": "8d82c240f190fc33723d48c308ccc1ed8baad69d",
