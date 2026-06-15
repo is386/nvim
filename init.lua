@@ -257,6 +257,7 @@ conform.setup {
   end,
   formatters_by_ft = {
     bash = { 'shfmt' },
+    gdscript = { 'gdscript-formatter' },
     go = { 'golines', 'goimports', 'gofumpt' },
     javascript = { 'prettierd', 'prettier', stop_after_first = true },
     json = { 'prettierd', 'prettier', stop_after_first = true },
