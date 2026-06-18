@@ -24,11 +24,9 @@ vim.pack.add {
   'https://github.com/OXY2DEV/markview.nvim',
   'https://github.com/mfussenegger/nvim-jdtls',
   'https://github.com/b0o/schemastore.nvim',
-  'https://github.com/m4xshen/hardtime.nvim',
   'https://github.com/karb94/neoscroll.nvim',
   'https://github.com/ray-x/lsp_signature.nvim',
   'https://github.com/christoomey/vim-tmux-navigator',
-  'https://github.com/rmagatti/auto-session',
   { src = 'https://github.com/akinsho/git-conflict.nvim', version = 'v2.1.0' },
   { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range '1' },
   { src = 'https://github.com/ThePrimeagen/harpoon', version = 'harpoon2' },
@@ -38,17 +36,6 @@ vim.pack.add {
 require('auto-save').setup {
   enabled = true,
   noautocmd = true,
-}
-
-require('auto-session').setup {
-  post_restore_cmds = {
-    function()
-      for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-        local name = vim.api.nvim_buf_get_name(buf)
-        if name ~= '' and vim.fn.filereadable(name) == 10 and not name:match '^%w+://' then vim.api.nvim_buf_delete(buf, { force = true }) end
-      end
-    end,
-  },
 }
 
 require('blink.cmp').setup {
@@ -75,18 +62,6 @@ gitsigns.setup {
 
 require('git-conflict').setup {
   default_mappings = false,
-}
-
-require('hardtime').setup {
-  disable_mouse = false,
-  max_count = 15,
-}
-
-local harpoon = require 'harpoon'
-harpoon:setup {
-  settings = {
-    save_on_toggle = true,
-  },
 }
 
 require('lsp_signature').setup { hint_enable = false }
