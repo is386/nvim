@@ -29,7 +29,6 @@ vim.pack.add {
   'https://github.com/christoomey/vim-tmux-navigator',
   { src = 'https://github.com/akinsho/git-conflict.nvim', version = 'v2.1.0' },
   { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range '1' },
-  { src = 'https://github.com/ThePrimeagen/harpoon', version = 'harpoon2' },
   { src = 'https://github.com/nvim-neo-tree/neo-tree.nvim', version = vim.version.range '3' },
 }
 
@@ -221,7 +220,7 @@ require('which-key').setup {
     { '<leader>d', group = 'Split' },
     { '<leader>i', group = 'Info' },
     { '<leader>c', group = 'Conflict' },
-    { '<leader>h', group = 'Harpoon' },
+    { '<leader>r', group = 'Replace' },
   },
 }
 
@@ -404,7 +403,6 @@ vim.o.relativenumber = true
 vim.o.scrolloff = 10
 vim.o.showmode = false
 vim.o.signcolumn = 'yes'
-vim.o.smartcase = true
 vim.o.timeoutlen = 300
 vim.o.undofile = true
 vim.o.updatetime = 250
@@ -452,7 +450,8 @@ vim.keymap.set('n', 'L', '$')
 vim.keymap.set('n', '<leader>#', function() vim.o.relativenumber = not vim.o.relativenumber end, { desc = 'Toggle Relative Lines' })
 vim.keymap.set('n', 'q', '<Nop>')
 vim.keymap.set('n', '<C-q>', 'q')
-vim.keymap.set('n', '<leader>r', ':%s/', { desc = 'Replace' })
+vim.keymap.set('n', '<leader>rr', ':%s/', { desc = 'Replace' })
+vim.keymap.set('n', '<leader>rc', ':%s/\\C', { desc = 'Replace (Case Sensitive)' })
 vim.keymap.set('v', 'p', 'P')
 
 ---- Git Conflict
@@ -486,16 +485,21 @@ vim.keymap.set('n', '<leader>gi', function()
   end, { desc = 'Dismiss Preview' })
 end, { desc = 'Git Preview Inline' })
 
----- Harpoon
-vim.keymap.set('n', '<leader>ha', function() harpoon:list():add() end, { desc = 'Add Harpoon' })
-vim.keymap.set('n', '<leader>hh', function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = 'Harpoon Menu' })
-vim.keymap.set('n', '<leader>0', function() harpoon:list():select(10) end, { desc = 'which_key_ignore' })
-for i = 1, 9 do
-  vim.keymap.set('n', '<leader>' .. i, function() harpoon:list():select(i) end, { desc = 'which_key_ignore' })
-end
-
 ---- NeoTree
-vim.keymap.set('n', '<leader>e', '<cmd>Neotree reveal float<cr>', { desc = 'Explorer' })
+vim.keymap.set(
+  'n',
+  '<leader>e',
+  function()
+    require('neo-tree.command').execute {
+      action = 'focus',
+      source = 'filesystem',
+      position = 'float',
+      reveal = true,
+      dir = vim.fn.getcwd(),
+    }
+  end,
+  { desc = 'Explorer' }
+)
 
 ---- Telescope
 local builtin = require 'telescope.builtin'
@@ -511,6 +515,20 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = vim.api.nvim_create_augroup('highlight-yank', { clear = true }),
   callback = function() vim.hl.on_yank() end,
 })
+
+local auto_reload = vim.api.nvim_create_augroup('auto-reload', { clear = true })
+local function check_file_changed()
+  if vim.fn.mode() == 'n' and vim.bo.buftype == '' then vim.cmd 'silent! checktime' end
+end
+
+vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter', 'CursorHold', 'CursorHoldI', 'TermLeave' }, {
+  desc = 'Reload buffers changed outside of Neovim',
+  group = auto_reload,
+  callback = check_file_changed,
+})
+
+local reload_timer = vim.uv.new_timer()
+if reload_timer then reload_timer:start(1000, 1000, vim.schedule_wrap(check_file_changed)) end
 
 vim.api.nvim_create_autocmd('User', {
   pattern = 'AutoSaveWritePost',
@@ -634,7 +652,7 @@ local is_godot_project = false
 local godot_project_path = ''
 local cwd = vim.fn.getcwd()
 
-for key, value in pairs(paths_to_check) do
+for _, value in pairs(paths_to_check) do
   if vim.uv.fs_stat(cwd .. value .. 'project.godot') then
     is_godot_project = true
     godot_project_path = cwd .. value
@@ -642,8 +660,16 @@ for key, value in pairs(paths_to_check) do
   end
 end
 
-local is_server_running = vim.uv.fs_stat(godot_project_path .. '/server.pipe')
-if is_godot_project and not is_server_running then vim.fn.serverstart(godot_project_path .. '/server.pipe') end
+if is_godot_project then
+  local pipe = vim.fs.normalize(godot_project_path .. '/server.pipe')
+  local ok, chan = pcall(vim.fn.sockconnect, 'pipe', pipe, { rpc = true })
+  if ok and chan ~= 0 then
+    pcall(vim.fn.chanclose, chan)
+  else
+    if vim.uv.fs_stat(pipe) then vim.uv.fs_unlink(pipe) end
+    vim.fn.serverstart(pipe)
+  end
+end
 
 -- Diagnostic
 vim.diagnostic.config {
