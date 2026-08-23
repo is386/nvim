@@ -11,6 +11,7 @@ vim.pack.add {
   'https://github.com/nvim-lualine/lualine.nvim',
   'https://github.com/nvim-mini/mini.nvim',
   'https://github.com/petertriho/nvim-scrollbar',
+  'https://github.com/nvim-pack/nvim-spectre',
   'https://github.com/nvim-telescope/telescope-ui-select.nvim',
   'https://github.com/nvim-telescope/telescope-fzf-native.nvim',
   'https://github.com/nvim-telescope/telescope.nvim',
@@ -165,6 +166,8 @@ require('nvim-treesitter').install(ts_to_install)
 require('scrollbar').setup {
   handlers = { gitsigns = true },
 }
+
+require('spectre').setup()
 
 local telescope = require 'telescope'
 telescope.setup {
@@ -452,6 +455,7 @@ vim.keymap.set('n', 'q', '<Nop>')
 vim.keymap.set('n', '<C-q>', 'q')
 vim.keymap.set('n', '<leader>rr', ':%s/', { desc = 'Replace' })
 vim.keymap.set('n', '<leader>rc', ':%s/\\C', { desc = 'Replace (Case Sensitive)' })
+vim.keymap.set('n', '<leader>rf', function() require('spectre').toggle() end, { desc = 'Replace in Files' })
 vim.keymap.set('v', 'p', 'P')
 
 ---- Git Conflict
