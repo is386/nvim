@@ -22,7 +22,7 @@ vim.pack.add {
   'https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim',
   'https://github.com/j-hui/fidget.nvim',
   'https://github.com/nvim-treesitter/nvim-treesitter',
-  'https://github.com/OXY2DEV/markview.nvim',
+  'https://github.com/iamcco/markdown-preview.nvim',
   'https://github.com/mfussenegger/nvim-jdtls',
   'https://github.com/b0o/schemastore.nvim',
   'https://github.com/karb94/neoscroll.nvim',
@@ -90,9 +90,17 @@ require('lualine').setup {
   },
 }
 
-require('markview').setup {
-  preview = { enable = false },
-}
+vim.g.mkdp_auto_close = 0
+vim.g.mkdp_theme = 'dark'
+vim.g.mkdp_filetypes = { 'markdown' }
+
+local mkdp_paths = vim.fn.glob(vim.fn.stdpath 'data' .. '/site/pack/*/opt/markdown-preview.nvim', true, true)
+for _, path in ipairs(mkdp_paths) do
+  if vim.fn.isdirectory(path .. '/app/node_modules') == 0 then
+    vim.notify('Building markdown-preview.nvim...', vim.log.levels.INFO)
+    vim.fn.system { 'npx', '--yes', 'yarn', 'install', '--cwd', path .. '/app' }
+  end
+end
 
 require('mini.move').setup()
 
@@ -556,6 +564,14 @@ vim.api.nvim_create_autocmd('FileType', {
   callback = function()
     pcall(vim.treesitter.start)
     vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+  end,
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'markdown',
+  desc = 'Markdown preview toggle',
+  callback = function(ev)
+    vim.keymap.set('n', '<leader>m', '<cmd>MarkdownPreviewToggle<cr>', { buffer = ev.buf, desc = 'Markdown Preview' })
   end,
 })
 
