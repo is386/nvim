@@ -273,6 +273,13 @@ local servers = {
     root_markers = { 'project.godot', '.git' },
   },
 
+  -- https://github.com/Dead-Shrimp-Studio/gdshader-lsp-cpp
+  gdshader = {
+    cmd = { vim.fn.expand '~/.local/bin/gdshader-lsp', '--stdio' },
+    filetypes = { 'gdshader' },
+    root_markers = { 'project.godot', '.git' },
+  },
+
   gopls = {
     settings = {
       gopls = {
@@ -381,7 +388,7 @@ for _, tools in pairs(conform.formatters_by_ft) do
   end
 end
 
-local skip = { gdscript = true }
+local skip = { gdscript = true, gdshader = true }
 local ensure_installed = vim.tbl_filter(function(k) return not skip[k] end, vim.tbl_keys(servers or {}))
 for tool in pairs(formatters) do
   table.insert(ensure_installed, tool)
@@ -419,6 +426,9 @@ vim.o.undofile = true
 vim.o.updatetime = 250
 vim.o.winborder = 'rounded'
 vim.filetype.add {
+  extension = {
+    gdshaderinc = 'gdshader',
+  },
   filename = {
     Bogiefile = 'yaml',
   },
