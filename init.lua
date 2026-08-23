@@ -245,6 +245,7 @@ conform.setup {
   formatters_by_ft = {
     bash = { 'shfmt' },
     gdscript = { 'gdscript-formatter' },
+    gdshader = { 'clang_format' },
     go = { 'golines', 'goimports', 'gofumpt' },
     javascript = { 'prettierd', 'prettier', stop_after_first = true },
     json = { 'prettierd', 'prettier', stop_after_first = true },
@@ -390,8 +391,9 @@ end
 
 local skip = { gdscript = true, gdshader = true }
 local ensure_installed = vim.tbl_filter(function(k) return not skip[k] end, vim.tbl_keys(servers or {}))
+local mason_names = { clang_format = 'clang-format' }
 for tool in pairs(formatters) do
-  table.insert(ensure_installed, tool)
+  table.insert(ensure_installed, mason_names[tool] or tool)
 end
 
 require('mason').setup {}
