@@ -22,7 +22,8 @@ vim.pack.add {
   'https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim',
   'https://github.com/j-hui/fidget.nvim',
   'https://github.com/nvim-treesitter/nvim-treesitter',
-  'https://github.com/iamcco/markdown-preview.nvim',
+  'https://github.com/selimacerbas/live-server.nvim',
+  'https://github.com/selimacerbas/markdown-preview.nvim',
   'https://github.com/mfussenegger/nvim-jdtls',
   'https://github.com/b0o/schemastore.nvim',
   'https://github.com/karb94/neoscroll.nvim',
@@ -90,17 +91,14 @@ require('lualine').setup {
   },
 }
 
-vim.g.mkdp_auto_close = 0
-vim.g.mkdp_theme = 'dark'
-vim.g.mkdp_filetypes = { 'markdown' }
+-- Dependency of markdown_preview
+require('live_server').setup {
+  notify = false,
+}
 
-local mkdp_paths = vim.fn.glob(vim.fn.stdpath 'data' .. '/site/pack/*/opt/markdown-preview.nvim', true, true)
-for _, path in ipairs(mkdp_paths) do
-  if vim.fn.isdirectory(path .. '/app/node_modules') == 0 then
-    vim.notify('Building markdown-preview.nvim...', vim.log.levels.INFO)
-    vim.fn.system { 'npx', '--yes', 'yarn', 'install', '--cwd', path .. '/app' }
-  end
-end
+require('markdown_preview').setup {
+  default_theme = 'dark',
+}
 
 require('mini.move').setup()
 
@@ -245,7 +243,7 @@ conform.setup {
   formatters_by_ft = {
     bash = { 'shfmt' },
     gdscript = { 'gdscript-formatter' },
-    gdshader = { 'clang_format' },
+    gdshader = { 'clang-format' },
     go = { 'golines', 'goimports', 'gofumpt' },
     javascript = { 'prettierd', 'prettier', stop_after_first = true },
     json = { 'prettierd', 'prettier', stop_after_first = true },
@@ -391,9 +389,9 @@ end
 
 local skip = { gdscript = true, gdshader = true }
 local ensure_installed = vim.tbl_filter(function(k) return not skip[k] end, vim.tbl_keys(servers or {}))
-local mason_names = { clang_format = 'clang-format' }
+local prefer_system = { ['clang-format'] = true }
 for tool in pairs(formatters) do
-  table.insert(ensure_installed, mason_names[tool] or tool)
+  if not (prefer_system[tool] and vim.fn.executable(tool) == 1) then table.insert(ensure_installed, tool) end
 end
 
 require('mason').setup {}
@@ -583,7 +581,14 @@ vim.api.nvim_create_autocmd('FileType', {
   pattern = 'markdown',
   desc = 'Markdown preview toggle',
   callback = function(ev)
-    vim.keymap.set('n', '<leader>m', '<cmd>MarkdownPreviewToggle<cr>', { buffer = ev.buf, desc = 'Markdown Preview' })
+    vim.keymap.set('n', '<leader>m', function()
+      local mp = require 'markdown_preview'
+      if mp._workspace_dir then
+        mp.stop()
+      else
+        mp.start()
+      end
+    end, { buffer = ev.buf, desc = 'Markdown Preview' })
   end,
 })
 
