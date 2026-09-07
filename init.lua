@@ -249,7 +249,7 @@ conform.setup {
     json = { 'prettierd', 'prettier', stop_after_first = true },
     lua = { 'stylua' },
     markdown = { 'prettierd', 'prettier', stop_after_first = true },
-    python = { 'ruff' },
+    python = { 'ruff_fix', 'ruff_organize_imports', 'ruff_format' },
     sh = { 'shfmt' },
     typescript = { 'prettierd', 'prettier', stop_after_first = true },
     vue = { 'prettierd', 'prettier', stop_after_first = true },
@@ -380,10 +380,11 @@ local servers = {
   },
 }
 
+local mason_name = { ruff_fix = 'ruff', ruff_format = 'ruff', ruff_organize_imports = 'ruff' }
 local formatters = {}
 for _, tools in pairs(conform.formatters_by_ft) do
   for _, tool in ipairs(tools) do
-    if type(tool) == 'string' then formatters[tool] = true end
+    if type(tool) == 'string' then formatters[mason_name[tool] or tool] = true end
   end
 end
 
